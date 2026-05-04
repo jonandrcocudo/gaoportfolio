@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gao | Editor de Vídeo & Designer</title>
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ==================== EFEITOS DE FUNDO & OVERLAYS ==================== -->
+    <div class="crt-scanlines"></div>
+    <div class="noise-bg"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="liminal-backdrop"></div>
+    <div class="cyber-grid"></div>
+    
+    <!-- Cursor Customizado -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+
+    <!-- Container dos Easter Eggs -->
+    <div id="system-override" class="hidden">
+        <h1 id="override-text"></h1>
+        <div class="glitch-overlay-effect"></div>
+    </div>
+
+    <header class="header">
+        <nav class="nav container">
+            <a href="#" class="nav__logo glitch-hover" data-text="Gao_">Gao_</a>
+            <div class="nav__menu">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="#work" class="nav__link"><span data-lang="en">Work</span><span data-lang="pt" style="display:none;">Trabalho</span></a></li>
+                    <li class="nav__item"><a href="#about" class="nav__link"><span data-lang="en">About</span><span data-lang="pt" style="display:none;">Sobre</span></a></li>
+                    <li class="nav__item"><a href="#contact" class="nav__link"><span data-lang="en">Contact</span><span data-lang="pt" style="display:none;">Contato</span></a></li>
+                </ul>
+            </div>
+            <div class="nav__buttons">
+                <button class="lang-switch glitch-hover" id="lang-btn" data-text="[EN/PT]">[EN/PT]</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="hero reveal">
+            <!-- Partículas dinâmicas e formas voadoras -->
+            <div id="particles-container"></div>
+            
+            <div class="floating-shape shape-square"></div>
+            <div class="floating-shape shape-circle"></div>
+            <div class="floating-shape shape-triangle"></div>
+            
+            <div class="deco-text deco-1">SYS.OP // RENDER_FARM_ONLINE</div>
+            <div class="deco-text deco-2">AESTHETIC // DREAMCORE_PROTOCOL</div>
+
+            <div class="hero__container container">
+                <h1 class="hero__title glitch" data-text="Video Editor & Motion Designer">
+                    <span data-lang="en">Video Editor & Motion Designer</span>
+                    <span data-lang="pt" style="display:none;">Editor de Vídeo & Motion Designer</span>
+                </h1>
+                <p class="hero__subtitle glitch-soft" data-text="Reality is just a draft. Let's edit it.">
+                    <span data-lang="en">Reality is just a draft. Let's edit it.</span>
+                    <span data-lang="pt" style="display:none;">A realidade é só um rascunho. Vamos editar.</span>
+                </p>
+                <div class="hero__actions">
+                    <a href="#work" class="button">
+                        <span data-lang="en">Initialize_Sequence</span>
+                        <span data-lang="pt" style="display:none;">Iniciar_Sequência</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PORTFOLIO ==================== -->
+        <section class="work section" id="work">
+            <h2 class="section__title reveal">
+                <span data-lang="en">> Database_Archive</span>
+                <span data-lang="pt" style="display:none;">> Arquivo_de_Dados</span>
+            </h2>
+
+            <!-- VÍDEOS -->
+            <h3 class="work__subtitle container reveal">
+                <span data-lang="en">// Video_Records</span>
+                <span data-lang="pt" style="display:none;">// Registros_de_Vídeo</span>
+            </h3>
+            <div class="work__grid container">
+                
+                <!-- Voltei para o data-video-url com o link do embed, igual na versão que funcionava pra você -->
+                <div class="work__card reveal" data-video-url="https://www.youtube.com/embed/wq4CMCR-Dq4?si=ArsNcWScKZMu_Wz7">
+                    <video class="work__img" loop muted playsinline>
+                        <source src="videos/apresentacai.mp4" type="video/mp4">
+                    </video>
+                    <div class="work__overlay"><i class="fas fa-play"></i></div>
+                </div>
+
+                <div class="work__card reveal" data-video-url="https://www.youtube.com/embed/5aL2FJyFrxA">
+                     <video class="work__img" loop muted playsinline>
+                        <source src="videos/plano perfeito anirap edit.mp4" type="video/mp4">
+                    </video>
+                    <div class="work__overlay"><i class="fas fa-play"></i></div>
+                </div>
+                
+                <div class="work__card reveal" data-video-url="https://www.youtube.com/embed/AqpRU6mkEj4">
+                    <video class="work__img" loop muted playsinline>
+                        <source src="videos/edit it's been so long.mp4" type="video/mp4">
+                    </video>
+                    <div class="work__overlay"><i class="fas fa-play"></i></div>
+                </div>
+                
+                <div class="work__card reveal" data-video-url="https://www.youtube.com/embed/d1msns3xFyA">
+                    <video class="work__img" loop muted playsinline>
+                        <source src="videos/rentune.mp4" type="video/mp4">
+                    </video>
+                    <div class="work__overlay"><i class="fas fa-play"></i></div>
+                </div>
+                
+                <div class="work__card reveal" data-video-url="https://www.youtube.com/embed/uZeU9dMsBFM">
+                    <video class="work__img" loop muted playsinline>
+                        <source src="videos/1finalmente backrooma.mp4" type="video/mp4">
+                    </video>
+                    <div class="work__overlay"><i class="fas fa-play"></i></div>
+                </div>
+                
+                <div class="work__card reveal" data-video-url="https://www.youtube.com/embed/EnCmrxVDQV0">
+                    <video class="work__img" loop muted playsinline>
+                        <source src="videos/quest 2 tiktok_1.mp4" type="video/mp4">
+                    </video>
+                    <div class="work__overlay"><i class="fas fa-play"></i></div>
+                </div>
+                
+                <div class="work__card reveal" data-video-url="https://www.youtube.com/embed/a9qNC0mtvWY">
+                    <video class="work__img" loop muted playsinline>
+                        <source src="videos/kinito pet completo.mp4" type="video/mp4">
+                    </video>
+                    <div class="work__overlay"><i class="fas fa-play"></i></div>
+                </div>
+                
+                <div class="work__card reveal" data-video-url="https://www.youtube.com/embed/1RF0AhmF1-M">
+                    <video class="work__img" loop muted playsinline>
+                        <source src="videos/wow epidemia.mp4" type="video/mp4">
+                    </video>
+                    <div class="work__overlay"><i class="fas fa-play"></i></div>
+                </div>
+                
+                <div class="work__card reveal" data-video-url="https://www.youtube.com/embed/bBp-xRQ1HFw">
+                    <video class="work__img" loop muted playsinline>
+                        <source src="videos/roxo fnaf.mp4" type="video/mp4">
+                    </video>
+                    <div class="work__overlay"><i class="fas fa-play"></i></div>
+                </div>
+            </div>
+
+            <!-- IMAGENS -->
+            <h3 class="work__subtitle container reveal" style="margin-top: 4rem;">
+                <span data-lang="en">// Visual_Assets</span>
+                <span data-lang="pt" style="display:none;">// Assets_Visuais</span>
+            </h3>
+            <div class="work__grid container">
+                <div class="work__card reveal" data-image-url="imagens/Dedtech%20png%20transa.png">
+                    <img src="imagens/Dedtech%20png%20transa.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/designador%20(1).png">
+                    <img src="imagens/designador%20(1).png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/51e878173442685.67c8b60b7ecc7.png">
+                    <img src="imagens/51e878173442685.67c8b60b7ecc7.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/0ee6b8173442685.67c8b60b806f8.png">
+                    <img src="imagens/0ee6b8173442685.67c8b60b806f8.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/7759e6173442685.67c8b60b801cf.png">
+                    <img src="imagens/7759e6173442685.67c8b60b801cf.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/Dream.png">
+                    <img src="imagens/Dream.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/gaojoia69.png">
+                    <img src="imagens/gaojoia69.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/jonan%20falante.png">
+                    <img src="imagens/jonan%20falante.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/gunrun%20thumb.png">
+                    <img src="imagens/gunrun%20thumb.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/minecraft%20solitario.png">
+                    <img src="imagens/minecraft%20solitario.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/thumb%20coach.png">
+                    <img src="imagens/thumb%20coach.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/thumb%20project%20kat.png">
+                    <img src="imagens/thumb%20project%20kat.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/teste%20fnaf.png">
+                    <img src="imagens/teste%20fnaf.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/loucura%20superman%20tristesa.png">
+                    <img src="imagens/loucura%20superman%20tristesa.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="work__card reveal" data-image-url="imagens/thumb%20iceberg%20minecraft.png">
+                    <img src="imagens/thumb%20iceberg%20minecraft.png" alt="Design project" class="work__img" loading="lazy">
+                    <div class="work__overlay"><i class="fas fa-eye"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== ABOUT ==================== -->
+        <section class="about section" id="about">
+            <div class="about__container container reveal">
+                <div class="about__image">
+                    <div class="glitch-img-wrapper">
+                        <img src="gaoling suiper ilums.png" alt="Gao Foto" class="about__img" loading="lazy">
+                    </div>
+                </div>
+                <div class="about__content">
+                    <h2 class="section__title" style="text-align: left;">
+                        <span data-lang="en">> Entity_Profile</span>
+                        <span data-lang="pt" style="display:none;">> Perfil_da_Entidade</span>
+                    </h2>
+                    <p class="about__text">
+                        <span data-lang="en">I'm a passionate and creative professional specializing in video editing and graphic design. With a keen eye for detail and a love for storytelling, I bring ideas to life through compelling visuals and dynamic motion. Bridging the gap between the surreal and the digital reality.</span>
+                        <span data-lang="pt" style="display:none;">Sou um profissional apaixonado e criativo, especializado em edição de vídeo e design gráfico. Com um olhar atento aos detalhes e amor por contar histórias, dou vida a ideias através de visuais atraentes e movimento dinâmico. Conectando a lacuna entre o surreal e a realidade digital.</span>
+                    </p>
+                    <h4 class="about__skills-title">
+                        <span data-lang="en">// Capabilities</span>
+                        <span data-lang="pt" style="display:none;">// Capacidades</span>
+                    </h4>
+                    <div class="about__skills">
+                        <span>Adobe Premiere Pro</span>
+                        <span>After Effects</span>
+                        <span>Photoshop</span>
+                        <span>Blender</span>
+                        <span>Descript</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== CONTACT ==================== -->
+        <section class="contact section" id="contact">
+            <h2 class="section__title reveal">
+                <span data-lang="en">> Establish_Connection</span>
+                <span data-lang="pt" style="display:none;">> Estabelecer_Conexão</span>
+            </h2>
+            <div class="contact__container container reveal">
+                 <div class="contact__socials">
+                    <a href="https://instagram.com/angelismo_gao" target="_blank" class="contact__social-link" rel="noopener">
+                        <i class="fab fa-instagram"></i> @angelismo_gao
+                    </a>
+                    <a href="https://tiktok.com/@gaojoia" target="_blank" class="contact__social-link" rel="noopener">
+                        <i class="fab fa-tiktok"></i> @gaojoia
+                    </a>
+                    <div class="contact__social-link" style="cursor: auto;">
+                        <i class="fab fa-discord"></i> gaojoia
+                    </div>
+                    <a href="mailto:gaobitolado@gmail.com" class="contact__social-link">
+                        <i class="fas fa-envelope"></i> gaobitolado@gmail.com
+                    </a>
+                 </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__container container">
+            <p>&copy; 2024 Gao_. [System Online]</p>
+            <!-- Dicas de easter egg disfarçadas de código de debug -->
+            <p style="opacity: 0.1; font-size: 0.6em; margin-top: 10px; font-family: monospace;">DEBUG: override_keys=[aiden, primus, watchdogs, parkour]</p>
+        </div>
+    </footer>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox__content">
+            <span class="lightbox__close" id="lightbox-close"><i class="fas fa-times"></i></span>
+            <div class="lightbox__body" id="lightbox-body"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
