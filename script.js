@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     updateLanguage();
 
-    /*==================== LIGHTBOX (PLAYER DE VÍDEO CORRIGIDO - ERROR 153 FIX) ====================*/
+    /*==================== LIGHTBOX (PLAYER DE VÍDEO CORRIGIDO) ====================*/
     const lightbox = document.getElementById('lightbox');
     const lightboxBody = document.getElementById('lightbox-body');
     const lightboxClose = document.getElementById('lightbox-close');
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const videoContainer = document.createElement('div');
             videoContainer.classList.add('video-container');
             
-            // 1. Força o Autoplay
+            // Força o Autoplay
             let finalUrl = videoUrl;
             if (finalUrl.includes('?')) {
                 finalUrl += '&autoplay=1';
@@ -143,16 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 finalUrl += '?autoplay=1';
             }
 
-            // 2. SOLUÇÃO GOOGLE: Substitui o domínio padrão pelo nocookie para evitar bloqueios cross-origin
-            finalUrl = finalUrl.replace('youtube.com', 'youtube-nocookie.com');
-
-            // 3. SOLUÇÃO GOOGLE: O atributo referrerpolicy="strict-origin-when-cross-origin" foi adicionado na tag
             videoContainer.innerHTML = `
                 <iframe 
                     src="${finalUrl}" 
                     frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    referrerpolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
                 </iframe>`;
             
@@ -172,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (imageUrl) {
             const img = document.createElement('img');
             img.src = imageUrl;
-            // A imagem não precisa de correção de vídeo, e não deve ter lazy load no modal
             lightboxBody.appendChild(img);
         }
 
@@ -201,25 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeLightbox();
     });
-
-    /*==================== LAZY VIDEO (PERFORMANCE DAS CAPAS) ====================*/
-    const observeVideos = () => {
-        const videos = document.querySelectorAll('.work__img');
-        if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.play().catch(() => {});
-                    } else {
-                        entry.target.pause();
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            videos.forEach(video => observer.observe(video));
-        }
-    };
-    observeVideos();
 
     /*==================== SCROLL REVEAL ANIMATION ====================*/
     const revealElements = document.querySelectorAll('.reveal');
