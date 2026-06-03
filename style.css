@@ -120,4 +120,61 @@ strong,b{color:var(--text)}
 @media (max-width:900px){.nav__toggle{display:grid;place-items:center}.nav__menu{position:fixed;inset:0 0 0 auto;width:min(88vw,390px);height:100svh;padding:5rem 1rem 1rem;background:#07080d;border-left:1px solid var(--line);display:flex;flex-direction:column;align-items:stretch;gap:.55rem;border-radius:0;transform:translateX(105%);transition:.25s;z-index:100}.nav__menu.show-menu{transform:translateX(0)}.nav__close{display:grid;place-items:center;position:absolute;top:1rem;right:1rem}.nav__link{padding:1rem;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}.nav__cta{display:none}.faq__grid{grid-template-columns:1fr}.about__grid{grid-template-columns:1fr}.about__image{max-width:390px;margin:auto}.orbit{height:190px}.orbit span{display:none}}
 @media (max-width:768px){.container{width:min(100% - 1rem,var(--max))}.section-pad{padding:4.6rem 0}.hero{min-height:auto;padding-top:6rem}h1{font-size:clamp(2.35rem,12vw,4.15rem)}h2{font-size:clamp(1.85rem,9vw,3.05rem)}.hero-shell{border-radius:24px;padding:1rem}.hero__buttons,.contact__actions{flex-direction:column}.btn{width:100%}.hero__badges span{font-size:.7rem}.proof-strip{grid-template-columns:1fr}.terminal{transform:none;animation:floatMobile 4.4s ease-in-out infinite alternate}@keyframes floatMobile{to{transform:translate3d(0,-8px,0)}}.mini-metrics{grid-template-columns:1fr}.mini-metrics span{animation:none}.gallery,.gallery--design{grid-template-columns:1fr}.contact-choice-modal{align-items:flex-end}.contact-choice__panel{border-radius:22px 22px 0 0}.contact-choice__grid,.conversion-list{grid-template-columns:1fr}.bg__grid,.shape,.bg__scan,.bg__stars,.bg__comets,.bg__rings,.cursor-glow{display:none}.bg__orb{filter:blur(48px);opacity:.18}.reveal{filter:none}.contact__box{animation:none}.footer__grid{flex-direction:column;align-items:flex-start}.big-play{width:62px;height:62px}.video-preview-stack img{animation-duration:6s}}
 @media (max-width:430px){.lang{width:50px;padding:0;font-size:.7rem}.nav{height:68px}.hero__lead{font-size:1rem}.price-card,.stat,.step,.faq__item,.contact__box,.addons,.conversion-card,.conversion-list{padding:1rem}.contact__box{text-align:left}.contact__actions{align-items:stretch}.float-quote{right:14px;bottom:14px;width:56px;height:56px}.page-loader small{font-size:.68rem}.video-card__label{font-size:.56rem}}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important;filter:none!important}.scroll-progress,.page-loader,.cursor-glow{display:none!important}.video-preview-stack img{opacity:0!important}.video-preview-stack img:first-child{opacity:1!important}}
+@media (prefers-reduced-motion:reduce){html:not(.motion-on) *,html:not(.motion-on) *::before,html:not(.motion-on) *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}html:not(.motion-on) .reveal{opacity:1!important;transform:none!important;filter:none!important}html:not(.motion-on) .scroll-progress,html:not(.motion-on) .page-loader,html:not(.motion-on) .cursor-glow{display:none!important}html:not(.motion-on) .video-preview-stack img{opacity:0!important}html:not(.motion-on) .video-preview-stack img:first-child{opacity:1!important}}
+
+/* =========================================================
+   DESKTOP MOTION FIX PACK
+   Motion is forced ON by default with html.motion-on.
+   Use ?motion=off only if you want the accessibility/still mode.
+   ========================================================= */
+html.motion-on .bg__orb{animation:orb 13s ease-in-out infinite alternate!important}
+html.motion-on .bg__mesh{animation:mesh 14s ease-in-out infinite alternate!important}
+html.motion-on .bg__grid{animation:grid 18s linear infinite!important}
+html.motion-on .bg__scan{animation:scanSweep 9s ease-in-out infinite!important}
+html.motion-on .bg__rings{animation:ringPulse 8s ease-in-out infinite alternate!important}
+html.motion-on .terminal{animation:floatPanel 5.8s ease-in-out infinite alternate!important}
+html.motion-on .terminal::after{animation:terminalScan 4s ease-in-out infinite!important}
+html.motion-on .terminal__bars span{animation:bar 1.3s ease both!important}
+html.motion-on .mini-metrics span{animation:metricFloat 4.2s ease-in-out infinite alternate!important}
+html.motion-on .shape{animation:shape 8s ease-in-out infinite alternate!important}
+html.motion-on .marquee__track{animation:marqueeMove 22s linear infinite!important}
+html.motion-on .orbit::before,html.motion-on .orbit::after{animation:orbitRotate 12s linear infinite!important}
+html.motion-on .section-head h2::after{animation:underlinePulse 2.8s ease-in-out infinite alternate!important}
+html.motion-on .price-card--hot::after{animation:borderFlow 4s linear infinite!important}
+html.motion-on .contact__box{animation:contactBreath 5s ease-in-out infinite alternate!important}
+html.motion-on .big-play::before,html.motion-on .big-play::after,html.motion-on .float-quote::before,html.motion-on .float-quote::after{animation:sonar 2.4s ease-out infinite!important}
+html.motion-on .video-preview-stack img{animation:thumbCycle 5.2s steps(1,end) infinite!important}
+html.motion-on .btn--primary::after{animation:buttonShine 3.2s ease-in-out infinite!important}
+html.motion-on .star{animation:starDrift linear infinite!important}
+html.motion-on .comet{animation:cometFly linear infinite!important}
+
+.desktop-fx{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;contain:layout paint style}
+.desktop-fx span{position:absolute;left:var(--x);top:var(--y);width:5px;height:5px;border-radius:50%;background:rgba(0,240,255,.55);box-shadow:0 0 18px rgba(0,240,255,.45);opacity:.32;transform:scale(var(--s));animation:desktopParticle var(--d) ease-in-out var(--delay) infinite alternate;will-change:transform,opacity}
+.desktop-fx span:nth-child(3n){background:rgba(255,0,85,.45);box-shadow:0 0 18px rgba(255,0,85,.36)}
+.desktop-fx span:nth-child(4n){background:rgba(138,43,226,.55);box-shadow:0 0 18px rgba(138,43,226,.36)}
+@keyframes desktopParticle{0%{transform:translate3d(-12px,18px,0) scale(var(--s));opacity:.12}50%{opacity:.55}100%{transform:translate3d(42px,-54px,0) scale(calc(var(--s) + .25));opacity:.22}}
+
+@media (min-width:769px){
+  html.motion-on .hero-shell{animation:desktopHeroBreath 7s ease-in-out infinite alternate!important}
+  html.motion-on .work__card{animation:desktopCardIdle 6s ease-in-out infinite alternate!important;animation-delay:calc(var(--idle-delay,0) * 1ms)!important}
+  html.motion-on .price-card,html.motion-on .step,html.motion-on .stat,html.motion-on .faq__item{animation:desktopSoftFloat 5.5s ease-in-out infinite alternate!important}
+  html.motion-on .price-card:nth-child(2),html.motion-on .step:nth-child(2),html.motion-on .stat:nth-child(2){animation-delay:-1.5s!important}
+  html.motion-on .price-card:nth-child(3),html.motion-on .step:nth-child(3),html.motion-on .stat:nth-child(3){animation-delay:-2.8s!important}
+}
+@keyframes desktopHeroBreath{to{box-shadow:0 30px 120px rgba(0,240,255,.09),0 0 80px rgba(255,0,85,.07);transform:translate3d(0,-4px,0)}}
+@keyframes desktopCardIdle{to{transform:translate3d(0,-4px,0)}}
+@keyframes desktopSoftFloat{to{transform:translate3d(0,-5px,0);border-color:rgba(0,240,255,.22)}}
+
+@media (max-width:768px){.desktop-fx{display:none!important}}
+
+/* Reduced motion now only activates when motion is intentionally off. */
+@media (prefers-reduced-motion:reduce){
+  html:not(.motion-on) *,html:not(.motion-on) *::before,html:not(.motion-on) *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  html:not(.motion-on) .reveal{opacity:1!important;transform:none!important;filter:none!important}
+  html:not(.motion-on) .scroll-progress,html:not(.motion-on) .page-loader,html:not(.motion-on) .cursor-glow{display:none!important}
+  html:not(.motion-on) .video-preview-stack img{opacity:0!important}
+  html:not(.motion-on) .video-preview-stack img:first-child{opacity:1!important}
+}
+html.motion-reduced *,html.motion-reduced *::before,html.motion-reduced *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html.motion-reduced .reveal{opacity:1!important;transform:none!important;filter:none!important}
+html.motion-reduced .scroll-progress,html.motion-reduced .page-loader,html.motion-reduced .cursor-glow,html.motion-reduced .desktop-fx{display:none!important}

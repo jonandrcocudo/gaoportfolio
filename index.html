@@ -39,6 +39,18 @@
   <link rel="dns-prefetch" href="https://www.youtube.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <script>
+    // PC animations ON by default, even when the desktop OS has reduced-motion enabled.
+    // Add ?motion=off to the URL only when you intentionally want still mode.
+    (function(){
+      var off = false;
+      try { off = new URLSearchParams(location.search).get('motion') === 'off'; } catch(e) {}
+      document.documentElement.classList.toggle('motion-on', !off);
+      document.documentElement.classList.toggle('motion-reduced', off);
+      document.documentElement.dataset.motion = off ? 'off' : 'on';
+    })();
+  </script>
   <link rel="stylesheet" href="style.css">
 
   <script type="application/ld+json">

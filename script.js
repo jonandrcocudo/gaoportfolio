@@ -1,9 +1,27 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.documentElement;
+  const params = new URLSearchParams(location.search);
+  const motionParam = params.get('motion');
+
+  /*
+    Motion is ON by default.
+    Some desktop systems/browsers report prefers-reduced-motion and the old version
+    respected that globally, which made the PC version look completely static.
+    Use ?motion=off only when you intentionally want a still/accessibility mode.
+  */
+  const reduced = motionParam === 'off';
+  root.classList.toggle('motion-on', !reduced);
+  root.classList.toggle('motion-reduced', reduced);
+  root.dataset.motion = reduced ? 'off' : 'on';
+
   const isMobile = matchMedia('(max-width: 768px)').matches;
   const finePointer = matchMedia('(pointer:fine)').matches;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const storage = {
+    get(key){ try { return sessionStorage.getItem(key); } catch { return null; } },
+    set(key, value){ try { sessionStorage.setItem(key, value); } catch {} }
+  };
 
   const $ = (sel, parent = document) => parent.querySelector(sel);
   const $$ = (sel, parent = document) => [...parent.querySelectorAll(sel)];
@@ -11,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Language: default English, supports ?lang=pt and session storage */
   const langBtn = $('#lang-btn');
   const langElements = $$('[data-lang]');
-  const urlLang = new URLSearchParams(location.search).get('lang');
+  const urlLang = params.get('lang');
 
   function displayFor(el){
     const tag = el.tagName.toLowerCase();
@@ -43,11 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if(langBtn) langBtn.textContent = safe === 'pt' ? 'PT/EN' : 'EN/PT';
-    sessionStorage.setItem('gao_lang', safe);
+    storage.set('gao_lang', safe);
     updateMetaForLang(safe);
   }
 
-  setLang(urlLang || sessionStorage.getItem('gao_lang') || 'en');
+  setLang(urlLang || storage.get('gao_lang') || 'en');
   langBtn?.addEventListener('click', () => setLang((root.dataset.currentLang || 'en') === 'en' ? 'pt' : 'en'));
 
   /* Header + mobile menu */
@@ -210,18 +228,38 @@ document.addEventListener('DOMContentLoaded', () => {
   if(reduced){
     reveals.forEach(el => el.classList.add('active'));
   }else{
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.classList.add('active');
-          io.unobserve(entry.target);
+    const activateVisible = () => {
+      reveals.forEach((el, i) => {
+        const r = el.getBoundingClientRect();
+        if(r.top < innerHeight * 0.92 && r.bottom > 0){
+          el.style.transitionDelay = `${Math.min(i % 5, 4) * 38}ms`;
+          el.classList.add('active');
         }
       });
-    }, {threshold:.08, rootMargin:'0px 0px -42px 0px'});
-    reveals.forEach((el, i) => {
-      el.style.transitionDelay = `${Math.min(i % 5, 4) * 38}ms`;
-      io.observe(el);
-    });
+    };
+
+    if('IntersectionObserver' in window){
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            entry.target.classList.add('active');
+            io.unobserve(entry.target);
+          }
+        });
+      }, {threshold:.04, rootMargin:'0px 0px -20px 0px'});
+      reveals.forEach((el, i) => {
+        el.style.transitionDelay = `${Math.min(i % 5, 4) * 38}ms`;
+        io.observe(el);
+      });
+    }
+
+    requestAnimationFrame(activateVisible);
+    addEventListener('scroll', activateVisible, {passive:true});
+    addEventListener('resize', activateVisible, {passive:true});
+
+    // Watchdog: if a desktop browser fails the observer, the site still animates in.
+    setTimeout(activateVisible, 260);
+    setTimeout(() => reveals.forEach(el => el.classList.add('active')), 1600);
   }
 
   /* Modal and lightbox */
@@ -309,6 +347,27 @@ document.addEventListener('DOMContentLoaded', () => {
   if(reduced) return;
 
   /* Desktop motion that stays cheap: transform, opacity and CSS variables only */
+  root.classList.add('motion-ready');
+
+  // Extra guaranteed desktop motion layer: pure CSS particles added by JS.
+  const desktopFx = !isMobile ? document.createElement('div') : null;
+  if(desktopFx){
+    desktopFx.className = 'desktop-fx';
+    desktopFx.setAttribute('aria-hidden', 'true');
+    const frag = document.createDocumentFragment();
+    for(let i = 0; i < 28; i++){
+      const dot = document.createElement('span');
+      dot.style.setProperty('--x', `${Math.random() * 100}%`);
+      dot.style.setProperty('--y', `${Math.random() * 100}%`);
+      dot.style.setProperty('--d', `${7 + Math.random() * 10}s`);
+      dot.style.setProperty('--delay', `${-Math.random() * 10}s`);
+      dot.style.setProperty('--s', `${0.6 + Math.random() * 1.8}`);
+      frag.appendChild(dot);
+    }
+    desktopFx.appendChild(frag);
+    document.body.appendChild(desktopFx);
+  }
+
   const starLayer = $('#bg-stars');
   if(starLayer && !isMobile){
     const frag = document.createDocumentFragment();

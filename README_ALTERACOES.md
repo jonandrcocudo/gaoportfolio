@@ -29,3 +29,21 @@ Atualizar vídeos e imagens automaticamente:
 - Coloque imagens novas dentro da pasta imagens/.
 - Rode: `python atualizar_gallery.py`
 - O arquivo gallery-data.js será recriado com a ordem correta dos vídeos e todas as imagens encontradas.
+
+## Correção PC — animações estáticas
+
+Nesta versão as animações do desktop foram corrigidas para não dependerem do `prefers-reduced-motion` do sistema operacional. Antes, se o Windows/navegador estivesse com redução de movimento ativada, o CSS desligava tudo e o site parecia parado no PC.
+
+Mudanças aplicadas:
+- Motion ligado por padrão com `html.motion-on`.
+- `?motion=off` continua disponível caso você queira modo sem animações.
+- JS com `sessionStorage` blindado para não quebrar o script inteiro.
+- Fallback para revelar seções mesmo se o `IntersectionObserver` falhar.
+- Camada extra `desktop-fx` com partículas leves no PC.
+- Reforço CSS com `!important` nas animações principais do desktop.
+- Script pequeno no `<head>` para ativar animação antes do CSS carregar.
+
+Para testar no PC:
+1. Suba todos os arquivos da pasta mantendo os nomes `index.html`, `style.css`, `script.js` e `gallery-data.js`.
+2. Limpe cache do navegador com Ctrl + F5.
+3. Confirme que a URL não está com `?motion=off`.
