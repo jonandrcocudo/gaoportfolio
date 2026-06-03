@@ -1,21 +1,21 @@
-VERSÃO ANIMATION BOOST
+VERSÃO MAX ANIMATION
 
 Adicionado:
-- Barra de progresso no topo.
-- Fundo com stars/drift no desktop.
-- Sweep neon no background.
-- Marquee cinemático de serviços.
-- Terminal com scanner animado.
-- Mini metrics flutuantes.
-- Cards com luz seguindo mouse.
-- Border gradient animado no pacote principal.
-- Shine nos botões.
-- Hover shine nos trabalhos.
-- CTA flutuante com sonar.
-- Reveal mais cinematográfico.
+- Loader animado inicial.
+- Fundo com anéis neon.
+- Cometas no desktop.
+- Cursor glow leve.
+- Orbit section animada.
+- Bordas neon animadas.
+- Título com gradiente em movimento.
+- Marquee mantido.
+- Terminal com scan.
+- Cards flutuando.
+- Cards com tilt 3D.
+- Timeline com linha animada.
+- Modal com entrada animada.
+- Botão WhatsApp com sonar.
 
-Performance:
-- Animações pesadas desligadas/reduzidas no mobile.
-- Tudo importante usa CSS transform/opacity.
-- Scroll progress usa requestAnimationFrame.
-- PT-BR e inglês continuam funcionando.
+Mobile:
+- Mantém visual animado, mas corta efeitos pesados.
+- Sem cometas/cursor/anéis pesados no celular.
