@@ -105,14 +105,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = youtubeId(url);
     const embed = embedUrl(url);
     const card = document.createElement('article');
-    card.className = 'work__card reveal';
+    card.className = 'work__card video-card reveal';
     card.dataset.videoUrl = embed;
 
-    /* Thumbnail previews are way smoother than many YouTube iframes */
-    const thumb = id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
-    card.innerHTML = `
-      ${thumb ? `<img src="${thumb}" class="work__img" alt="Video preview by Gao" loading="lazy">` : `<div class="work__img"></div>`}
-      <div class="work__overlay"><i class="fas fa-play"></i></div>
+    /*
+      Low-FPS autoplay illusion:
+      YouTube does not expose lightweight animated thumbnails reliably.
+      So we cycle through several official thumbnail frames.
+      It feels alive, costs almost nothing, and the real iframe only loads on click.
+    */
+    const thumbs = id ? [
+      `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
+      `https://img.youtube.com/vi/${id}/mqdefault.jpg`,
+      `https://img.youtube.com/vi/${id}/0.jpg`,
+      `https://img.youtube.com/vi/${id}/1.jpg`
+    ] : [];
+
+    card.innerHTML = thumbs.length ? `
+      <div class="video-preview-stack work__img">
+        ${thumbs.map((src, i) => `<img src="${src}" alt="Low FPS video preview ${i + 1}" loading="lazy">`).join('')}
+      </div>
+      <div class="video-card__scan"></div>
+      <div class="video-card__label">LOW-FPS PREVIEW</div>
+      <div class="big-play"><i class="fas fa-play"></i></div>
+      <div class="work__overlay"></div>
+    ` : `
+      <div class="work__img"></div>
+      <div class="big-play"><i class="fas fa-play"></i></div>
+      <div class="work__overlay"></div>
     `;
     return card;
   }
@@ -183,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     lightboxBody.innerHTML = '';
 
     if(videoUrl){
-      const url = videoUrl.includes('?') ? videoUrl + '&autoplay=1' : videoUrl + '?autoplay=1';
+      const url = videoUrl.includes('?') ? videoUrl + '&autoplay=1&rel=0&modestbranding=1' : videoUrl + '?autoplay=1&rel=0&modestbranding=1';
       lightboxBody.innerHTML = `<div class="video-container"><iframe src="${url}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
     }else if(imageUrl){
       lightboxBody.innerHTML = `<img src="${imageUrl}" alt="Design preview">`;
@@ -314,5 +334,85 @@ document.addEventListener('DOMContentLoaded', () => {
         raf = null;
       });
     }, {passive:true});
+  }
+});
+
+
+/* =========================================================
+   MAX ANIMATION JS — motion layer
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', () => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = matchMedia('(max-width: 768px)').matches;
+
+  const loader = document.getElementById('page-loader');
+  setTimeout(() => loader?.classList.add('hidden'), 650);
+
+  if(reduced) return;
+
+  const comets = document.getElementById('bg-comets');
+  if(comets && !isMobile){
+    const frag = document.createDocumentFragment();
+    for(let i = 0; i < 7; i++){
+      const c = document.createElement('span');
+      c.className = 'comet';
+      c.style.top = (12 + Math.random() * 76) + '%';
+      c.style.left = (-20 - Math.random() * 50) + '%';
+      c.style.animationDuration = (6 + Math.random() * 9) + 's';
+      c.style.animationDelay = (-Math.random() * 10) + 's';
+      frag.appendChild(c);
+    }
+    comets.appendChild(frag);
+  }
+
+  document.querySelectorAll('.work__card').forEach((card, i) => {
+    card.style.setProperty('--delay', i % 8);
+  });
+
+  if(!isMobile && matchMedia('(pointer:fine)').matches){
+    const glow = document.createElement('div');
+    glow.className = 'cursor-glow';
+    document.body.appendChild(glow);
+
+    let raf = null;
+    let x = innerWidth / 2;
+    let y = innerHeight / 2;
+    let gx = x;
+    let gy = y;
+
+    addEventListener('pointermove', e => {
+      x = e.clientX;
+      y = e.clientY;
+      if(!raf) raf = requestAnimationFrame(loop);
+    }, {passive:true});
+
+    function loop(){
+      gx += (x - gx) * .12;
+      gy += (y - gy) * .12;
+      glow.style.left = gx + 'px';
+      glow.style.top = gy + 'px';
+      if(Math.abs(x - gx) > .5 || Math.abs(y - gy) > .5){
+        raf = requestAnimationFrame(loop);
+      }else{
+        raf = null;
+      }
+    }
+  }
+
+  if(!isMobile && matchMedia('(pointer:fine)').matches){
+    document.querySelectorAll('.price-card, .step, .stat, .terminal, .contact__box').forEach(card => {
+      card.classList.add('tilted');
+
+      card.addEventListener('pointermove', e => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - .5;
+        const py = (e.clientY - r.top) / r.height - .5;
+        card.style.rotate = `${py * -4}deg ${px * 5}deg`;
+      }, {passive:true});
+
+      card.addEventListener('pointerleave', () => {
+        card.style.rotate = '';
+      }, {passive:true});
+    });
   }
 });

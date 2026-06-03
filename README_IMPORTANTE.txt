@@ -1,21 +1,13 @@
-VERSÃO MAX ANIMATION
+VERSÃO LOW-FPS AUTOPLAY PREVIEW
 
-Adicionado:
-- Loader animado inicial.
-- Fundo com anéis neon.
-- Cometas no desktop.
-- Cursor glow leve.
-- Orbit section animada.
-- Bordas neon animadas.
-- Título com gradiente em movimento.
-- Marquee mantido.
-- Terminal com scan.
-- Cards flutuando.
-- Cards com tilt 3D.
-- Timeline com linha animada.
-- Modal com entrada animada.
-- Botão WhatsApp com sonar.
+O que foi adicionado:
+- Os vídeos agora têm uma prévia animada em low FPS.
+- A prévia usa thumbnails do YouTube alternando em steps, sem carregar vários players.
+- Botão play grande por cima.
+- O iframe real do YouTube só carrega quando clicar.
+- Mantém performance melhor do que autoplay real em todos os vídeos.
+- Ao clicar, abre lightbox com autoplay do vídeo real.
 
-Mobile:
-- Mantém visual animado, mas corta efeitos pesados.
-- Sem cometas/cursor/anéis pesados no celular.
+Por que assim:
+Autoplay real em 10+ iframes do YouTube deixa o site pesado e trava.
+Essa versão dá a sensação de vídeo vivo sem matar FPS.
