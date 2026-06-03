@@ -47,3 +47,13 @@ Para testar no PC:
 1. Suba todos os arquivos da pasta mantendo os nomes `index.html`, `style.css`, `script.js` e `gallery-data.js`.
 2. Limpe cache do navegador com Ctrl + F5.
 3. Confirme que a URL não está com `?motion=off`.
+
+
+## Atualização — previews suaves e otimizadas
+
+- Removido o visual de preview low-FPS baseado em troca de thumbnails.
+- Agora os cards de vídeo usam preview real e suave do YouTube em iframe mudo.
+- Os players são carregados de forma preguiçosa: só quando o card aparece na tela, recebe hover ou foco.
+- O site limita a quantidade de previews ativas ao mesmo tempo para não travar: até 4 no desktop e 1 no mobile.
+- Em conexão lenta, modo economia de dados ou `?motion=off`, o site volta para thumbnail estática otimizada.
+- O vídeo completo ainda abre no lightbox somente ao clicar, com autoplay.

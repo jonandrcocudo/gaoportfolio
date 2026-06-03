@@ -170,23 +170,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = document.createElement('article');
     card.className = 'work__card video-card reveal';
     card.dataset.videoUrl = embed;
+    if(id){
+      card.dataset.youtubeId = id;
+      card.dataset.previewSrc = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=0&playsinline=1&loop=1&playlist=${id}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=0`;
+    }
     card.setAttribute('role','button');
     card.setAttribute('tabindex','0');
     card.setAttribute('aria-label', `Open video portfolio item ${index + 1}`);
 
-    const thumbs = id ? [
-      `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
-      `https://img.youtube.com/vi/${id}/mqdefault.jpg`,
-      `https://img.youtube.com/vi/${id}/0.jpg`,
-      `https://img.youtube.com/vi/${id}/1.jpg`
-    ] : [];
+    const thumb = id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
+    const loading = index < 3 ? 'eager' : 'lazy';
+    const fetchPriority = index < 3 ? 'high' : 'auto';
 
-    card.innerHTML = thumbs.length ? `
-      <div class="video-preview-stack work__img" aria-hidden="true">
-        ${thumbs.map((src, i) => `<img src="${src}" alt="" loading="lazy" decoding="async">`).join('')}
+    card.innerHTML = id ? `
+      <div class="video-preview-media work__img" aria-hidden="true">
+        <img class="video-thumb" src="${thumb}" alt="" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}">
+        <div class="video-preview-player"></div>
       </div>
       <div class="video-card__scan"></div>
-      <div class="video-card__label">LOW-FPS PREVIEW</div>
+      <div class="video-card__label">OPTIMIZED PREVIEW</div>
       <div class="big-play" aria-hidden="true"><i class="fas fa-play"></i></div>
       <div class="work__overlay"></div>
     ` : `
@@ -222,6 +224,149 @@ document.addEventListener('DOMContentLoaded', () => {
     window.GAO_IMAGES.forEach((img, i) => frag.appendChild(makeImageCard(img, i)));
     designGallery.appendChild(frag);
   }
+
+
+  /* Smooth optimized video previews
+     - Real muted YouTube preview, not low-FPS thumbnail cycling.
+     - Lazy-loaded only when cards are visible or hovered.
+     - Limits active players to keep desktop/mobile fast.
+  */
+  function setupOptimizedVideoPreviews(){
+    const cards = $$('.video-card[data-youtube-id]');
+    if(!cards.length) return;
+
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const saveData = !!connection?.saveData;
+    const slowConnection = /^(slow-2g|2g)$/.test(connection?.effectiveType || '');
+
+    // Keep the site optimized on weak connections. Poster still works instantly.
+    if(reduced || saveData || slowConnection){
+      cards.forEach(card => card.classList.add('poster-only'));
+      return;
+    }
+
+    const maxActive = isMobile ? 1 : 4;
+    const active = new Map();
+    const visible = new Set();
+    let hoverCard = null;
+    let refreshTimer = 0;
+
+    function unloadPreview(card){
+      const holder = card.querySelector('.video-preview-player');
+      if(holder) holder.textContent = '';
+      active.delete(card);
+      card.classList.remove('preview-ready','preview-loading');
+    }
+
+    function unloadOldest(except){
+      let candidate = null;
+      let oldest = Infinity;
+      active.forEach((time, card) => {
+        if(card === except || card === hoverCard) return;
+        if(time < oldest){
+          oldest = time;
+          candidate = card;
+        }
+      });
+      if(!candidate && active.size){
+        candidate = active.keys().next().value;
+      }
+      if(candidate) unloadPreview(candidate);
+    }
+
+    function loadPreview(card, priority = false){
+      if(!card?.dataset.previewSrc || active.has(card)) return;
+      while(active.size >= maxActive) unloadOldest(card);
+
+      const holder = card.querySelector('.video-preview-player');
+      if(!holder) return;
+      card.classList.add('preview-loading');
+      const iframe = document.createElement('iframe');
+      iframe.src = card.dataset.previewSrc;
+      iframe.title = 'Muted optimized video preview';
+      iframe.loading = priority ? 'eager' : 'lazy';
+      iframe.tabIndex = -1;
+      iframe.setAttribute('aria-hidden', 'true');
+      iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      iframe.addEventListener('load', () => {
+        card.classList.remove('preview-loading');
+        card.classList.add('preview-ready');
+      }, {once:true});
+      holder.replaceChildren(iframe);
+      active.set(card, performance.now());
+    }
+
+    function refreshVisiblePreviews(){
+      clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(() => {
+        const sorted = [...visible]
+          .filter(card => card.isConnected)
+          .sort((a, b) => Math.abs(a.getBoundingClientRect().top) - Math.abs(b.getBoundingClientRect().top));
+
+        sorted.slice(0, maxActive).forEach((card, index) => {
+          const load = () => loadPreview(card, index === 0);
+          if('requestIdleCallback' in window){
+            requestIdleCallback(load, {timeout: 900});
+          }else{
+            setTimeout(load, index * 120);
+          }
+        });
+
+        active.forEach((_, card) => {
+          if(!visible.has(card) && card !== hoverCard) unloadPreview(card);
+        });
+      }, 80);
+    }
+
+    if('IntersectionObserver' in window){
+      const previewObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const card = entry.target;
+          if(entry.isIntersecting){
+            visible.add(card);
+            card.classList.add('preview-in-view');
+          }else{
+            visible.delete(card);
+            card.classList.remove('preview-in-view');
+            if(card !== hoverCard){
+              setTimeout(() => {
+                if(!visible.has(card) && card !== hoverCard) unloadPreview(card);
+              }, 450);
+            }
+          }
+        });
+        refreshVisiblePreviews();
+      }, {threshold:.25, rootMargin:'180px 0px'});
+      cards.forEach(card => previewObserver.observe(card));
+    }else{
+      // Fallback: no observer, only load on hover/focus.
+      cards.forEach(card => card.classList.add('poster-only'));
+    }
+
+    if(finePointer){
+      cards.forEach(card => {
+        card.addEventListener('pointerenter', () => {
+          hoverCard = card;
+          loadPreview(card, true);
+        }, {passive:true});
+        card.addEventListener('pointerleave', () => {
+          hoverCard = null;
+          refreshVisiblePreviews();
+        }, {passive:true});
+        card.addEventListener('focus', () => {
+          hoverCard = card;
+          loadPreview(card, true);
+        });
+        card.addEventListener('blur', () => {
+          hoverCard = null;
+          refreshVisiblePreviews();
+        });
+      });
+    }
+  }
+
+  setupOptimizedVideoPreviews();
 
   /* Reveal observer after dynamic gallery exists */
   const reveals = $$('.reveal');
