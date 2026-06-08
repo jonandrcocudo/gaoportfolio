@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://gaoportfolio.vercel.app/sitemap.xml
+Sitemap: https://gaoportfolio.vercel.app/sitemap2.xml
