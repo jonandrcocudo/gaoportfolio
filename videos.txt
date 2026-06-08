@@ -1,19 +1,15 @@
-# Add one YouTube link per line.
-# The order in this file is the order that appears on the site.
-# Supported formats:
-# https://www.youtube.com/watch?v=VIDEO_ID
-# https://youtu.be/VIDEO_ID
-# https://www.youtube.com/shorts/VIDEO_ID
-# VIDEO_ID
+# Video showcase order for Gao Portfolio
+# The first links are intentionally the strongest sales proof.
+# Metadata for these URLs is defined in gallery-data.js / build_portfolio.py.
 
-https://www.youtube.com/watch?v=5aL2FJyFrxA
-https://www.youtube.com/watch?v=AqpRU6mkEj4
-https://www.youtube.com/watch?v=d1msns3xFyA
-https://youtu.be/VSOYV34zxyI
-https://www.youtube.com/watch?v=uZeU9dMsBFM
-https://www.youtube.com/watch?v=EnCmrxVDQV0
-https://www.youtube.com/watch?v=a9qNC0mtvWY
-https://www.youtube.com/watch?v=1RF0AhmF1-M
-https://www.youtube.com/watch?v=bBp-xRQ1HFw
-https://www.youtube.com/watch?v=psM8ihpdWho
-https://www.youtube.com/watch?v=dusiBX59v2c
+https://www.youtube.com/watch?v=psM8ihpdWho # best PT-BR horror games video essay: 3D, VFX, motion, retention
+https://www.youtube.com/watch?v=bBp-xRQ1HFw # Purple Guy FNAF edit: pixel art, 3D, After Effects
+https://www.youtube.com/watch?v=a9qNC0mtvWY # KinitoPET lore TikTok: 3D, VFX, VRChat
+https://www.youtube.com/watch?v=5aL2FJyFrxA # Death Note motion manga edit
+https://www.youtube.com/watch?v=AqpRU6mkEj4 # It's Been So Long motion + pixel art
+https://www.youtube.com/watch?v=d1msns3xFyA # Rentune Fears to Fathom story/narration video
+https://youtu.be/VSOYV34zxyI # agoodgamer Mouse PI For Hire platinum video
+https://www.youtube.com/watch?v=uZeU9dMsBFM # Backrooms Escape Together gameplay edit
+https://www.youtube.com/watch?v=EnCmrxVDQV0 # Quest 2 VR TikTok
+https://www.youtube.com/watch?v=1RF0AhmF1-M # WoW Corrupted Blood epidemic TikTok/lore
+https://www.youtube.com/watch?v=dusiBX59v2c # Reflective narrative video, clean organization

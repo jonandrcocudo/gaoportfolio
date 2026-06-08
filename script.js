@@ -41,13 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateMetaForLang(lang){
     const isPt = lang === 'pt';
     document.title = isPt
-      ? 'Gao | Editor de Vídeo de Alta Retenção para Criadores e Marcas'
-      : 'Gao | High-Retention Video Editor for Creators & Brands';
+      ? 'Gao | Editor de Vídeo para YouTube, TikTok, Gaming, Motion Manga e VFX'
+      : 'Gao | Video Editor for YouTube, TikTok, Motion Manga, Gaming & VFX';
     const desc = document.querySelector('meta[name="description"]');
     if(desc){
       desc.content = isPt
-        ? 'Contrate Gao, editor de vídeo e motion designer focado em retenção para YouTube, TikTok, Reels, thumbnails, motion graphics e sistemas mensais de conteúdo.'
-        : 'Hire Gao, a retention-focused video editor and motion designer for YouTube, TikTok, Reels, thumbnails, motion graphics and monthly content systems for creators, brands and agencies.';
+        ? 'Contrate Gao (@gaoeditor) para YouTube, TikTok, Shorts, gaming, lore, motion manga, 3D/VFX e thumbnails. Vídeos avulsos a partir de $29 e orçamento personalizado.'
+        : 'Hire Gao (@gaoeditor) for YouTube videos, TikToks, Shorts, motion manga, gaming edits, lore videos, 3D/VFX and thumbnails. Single videos from $29, custom quotes available.';
     }
   }
 
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* Typing animation */
   const typingLine = $('#typing-line');
-  const phrases = ['editing hooks...', 'syncing motion...', 'building retention...', 'polishing thumbnails...', 'rendering premium visuals...'];
+  const phrases = ['editing hooks...', 'pricing one video...', 'syncing motion...', 'building retention...', 'polishing thumbnails...', 'rendering premium visuals...'];
   let phraseIndex = 0;
   let charIndex = 0;
   let deleting = false;
@@ -163,36 +163,65 @@ document.addEventListener('DOMContentLoaded', () => {
     return name ? `${fallback}: ${name}` : fallback;
   }
 
+  function escapeHTML(value){
+    return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+  }
+
   function makeVideoCard(item, index){
     const url = item.url || item;
     const id = youtubeId(url);
     const embed = embedUrl(url);
+    const title = escapeHTML(item.title || `Video edit ${index + 1}`);
+    const rawCategory = item.category || 'shorts';
+    const categories = Array.isArray(item.categories) && item.categories.length ? item.categories : [rawCategory];
+    const category = escapeHTML(rawCategory);
+    const platform = escapeHTML(item.platform || 'Video edit');
+    const price = escapeHTML(item.price || 'from $29');
+    const caption = escapeHTML(item.caption || 'Click to watch the full edit.');
+    const isFeatured = categories.includes('featured');
+    const skillTags = Array.isArray(item.skills) ? item.skills.slice(0, 5).map(skill => `<span>${escapeHTML(skill)}</span>`).join('') : '';
     const card = document.createElement('article');
-    card.className = 'work__card video-card reveal';
+    card.className = 'work__card video-card reveal' + (isFeatured ? ' video-card--featured' : '');
     card.dataset.videoUrl = embed;
+    card.dataset.category = category;
+    card.dataset.categories = categories.map(c => String(c).trim()).join(' ');
+    card.style.setProperty('--idle-delay', String((index % 6) * 115));
     if(id){
       card.dataset.youtubeId = id;
       card.dataset.previewSrc = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=0&playsinline=1&loop=1&playlist=${id}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=0`;
     }
     card.setAttribute('role','button');
     card.setAttribute('tabindex','0');
-    card.setAttribute('aria-label', `Open video portfolio item ${index + 1}`);
+    card.setAttribute('aria-label', `Open ${title}`);
 
-    const thumb = id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
+    const thumb = id ? `https://i.ytimg.com/vi/${id}/maxresdefault.jpg` : '';
+    const thumbFallback = id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
     const loading = index < 3 ? 'eager' : 'lazy';
     const fetchPriority = index < 3 ? 'high' : 'auto';
+    const featuredBadge = isFeatured ? '<div class="video-featured-badge">Best proof</div>' : '';
+    const skills = skillTags ? `<div class="video-skill-row">${skillTags}</div>` : '';
 
     card.innerHTML = id ? `
       <div class="video-preview-media work__img" aria-hidden="true">
-        <img class="video-thumb" src="${thumb}" alt="" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}">
+        <img class="video-thumb" src="${thumb}" alt="" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}" onerror="this.onerror=null;this.src='${thumbFallback}'">
         <div class="video-preview-player"></div>
       </div>
       <div class="video-card__scan"></div>
-      <div class="video-card__label">OPTIMIZED PREVIEW</div>
+      <div class="video-card__label">${platform}</div>
+      ${featuredBadge}
+      <div class="video-price-badge"><strong>${price}</strong><span>/ video</span></div>
+      <div class="portfolio-card-copy">
+        <strong>${title}</strong>
+        <span>${caption}</span>
+        ${skills}
+      </div>
       <div class="big-play" aria-hidden="true"><i class="fas fa-play"></i></div>
       <div class="work__overlay"></div>
     ` : `
       <div class="work__img"></div>
+      ${featuredBadge}
+      <div class="video-price-badge"><strong>${price}</strong><span>/ video</span></div>
+      <div class="portfolio-card-copy"><strong>${title}</strong><span>${caption}</span>${skills}</div>
       <div class="big-play" aria-hidden="true"><i class="fas fa-play"></i></div>
       <div class="work__overlay"></div>
     `;
@@ -201,13 +230,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function makeImageCard(item, index){
     const card = document.createElement('article');
-    card.className = 'work__card reveal';
+    card.className = 'work__card design-card reveal';
     card.dataset.imageUrl = item.src;
+    card.dataset.category = item.category || 'thumbnail';
+    card.style.setProperty('--idle-delay', String((index % 7) * 95));
+    if(item.fallback) card.dataset.fallbackImage = item.fallback;
     card.setAttribute('role','button');
     card.setAttribute('tabindex','0');
-    card.setAttribute('aria-label', `Open design portfolio item ${index + 1}`);
+    card.setAttribute('aria-label', `Open ${item.title || 'design portfolio item'} ${index + 1}`);
+    const alt = escapeHTML(item.alt && !item.alt.includes(' - ') ? item.alt : cleanAlt(item.fallback || item.src));
+    const title = escapeHTML(item.title || cleanAlt(item.fallback || item.src, 'Design'));
+    const label = escapeHTML(item.label || item.category || 'Design');
+    const desc = escapeHTML(item.description || 'Visual asset by Gao');
+    const price = escapeHTML(item.price || 'from $15');
+    const src = escapeHTML(item.src);
+    const fallback = escapeHTML(item.fallback || item.src);
+    const sizeAttrs = item.width && item.height ? ` width="${escapeHTML(item.width)}" height="${escapeHTML(item.height)}"` : '';
     card.innerHTML = `
-      <img src="${item.src}" alt="${item.alt && !item.alt.includes(' - ') ? item.alt : cleanAlt(item.src)}" class="work__img" loading="lazy" decoding="async">
+      <img src="${src}" alt="${alt}" class="work__img" loading="lazy" decoding="async"${sizeAttrs} onerror="this.onerror=null;this.src='${fallback}'">
+      <div class="design-card__label">${label}</div>
+      <div class="design-price-badge">${price}</div>
+      <div class="portfolio-card-copy portfolio-card-copy--design">
+        <strong>${title}</strong>
+        <span>${desc}</span>
+      </div>
       <div class="work__overlay"><i class="fas fa-eye" aria-hidden="true"></i></div>
     `;
     return card;
@@ -224,6 +270,32 @@ document.addEventListener('DOMContentLoaded', () => {
     window.GAO_IMAGES.forEach((img, i) => frag.appendChild(makeImageCard(img, i)));
     designGallery.appendChild(frag);
   }
+
+
+  function setupPortfolioFilters(){
+    $$('[data-gallery-filter]').forEach(group => {
+      const galleryId = group.dataset.galleryFilter;
+      const gallery = document.getElementById(galleryId);
+      if(!gallery) return;
+      const buttons = $$('[data-filter]', group);
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filter = btn.dataset.filter || 'all';
+          buttons.forEach(b => b.classList.toggle('active', b === btn));
+          $$('.work__card', gallery).forEach(card => {
+            const cardCategories = (card.dataset.categories || card.dataset.category || '').split(/\s+/);
+            const match = filter === 'all' || card.dataset.category === filter || cardCategories.includes(filter);
+            card.classList.toggle('is-filtered-out', !match);
+            if(match){
+              requestAnimationFrame(() => card.classList.add('active'));
+            }
+          });
+        });
+      });
+    });
+  }
+
+  setupPortfolioFilters();
 
 
   /* Smooth optimized video previews
@@ -422,7 +494,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const url = videoUrl.includes('?') ? videoUrl + '&autoplay=1&rel=0&modestbranding=1' : videoUrl + '?autoplay=1&rel=0&modestbranding=1';
       lightboxBody.innerHTML = `<div class="video-container"><iframe src="${url}" title="Gao portfolio video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
     }else if(imageUrl){
-      lightboxBody.innerHTML = `<img src="${imageUrl}" alt="Design preview by Gao">`;
+      const fallback = document.querySelector(`.work__card[data-image-url="${CSS.escape(imageUrl)}"]`)?.dataset.fallbackImage || imageUrl;
+      lightboxBody.innerHTML = `<img src="${imageUrl}" alt="Design preview by Gao" onerror="this.onerror=null;this.src='${fallback}'">`;
     }
 
     lightbox.classList.add('show');
@@ -543,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
     comets.appendChild(frag);
   }
 
-  $$('.price-card, .step, .stat, .faq__item, .conversion-card, .conversion-list').forEach(card => {
+  $$('.price-card, .micro-offer, .step, .stat, .faq__item, .conversion-card, .conversion-list').forEach(card => {
     card.addEventListener('pointermove', e => {
       const r = card.getBoundingClientRect();
       card.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
@@ -595,7 +668,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    $$('.price-card, .step, .stat, .terminal, .contact__box, .conversion-card, .conversion-list').forEach(card => {
+    $$('.price-card, .micro-offer, .step, .stat, .terminal, .contact__box, .conversion-card, .conversion-list').forEach(card => {
       card.classList.add('tilted');
       card.addEventListener('pointermove', e => {
         const r = card.getBoundingClientRect();

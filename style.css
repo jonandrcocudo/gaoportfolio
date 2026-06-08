@@ -264,3 +264,296 @@ html.motion-reduced .scroll-progress,html.motion-reduced .page-loader,html.motio
 }
 html.motion-reduced .video-preview-player{display:none!important}
 html.motion-reduced .video-thumb{opacity:1!important;transform:none!important}
+
+/* =========================================================
+   CONVERSION + SEO PRICING UPDATE
+   Clear per-video options, lower friction, optimized images.
+   ========================================================= */
+.per-video-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1rem;
+  margin-top:1.15rem;
+}
+.micro-offer{
+  border:1px solid rgba(0,240,255,.18);
+  background:linear-gradient(145deg,rgba(0,240,255,.075),rgba(255,255,255,.04));
+  border-radius:22px;
+  padding:1.05rem;
+  min-height:100%;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 16px 45px rgba(0,0,0,.22);
+}
+.micro-offer::before{
+  content:"";
+  position:absolute;
+  inset:auto -30% -48% -30%;
+  height:80%;
+  background:radial-gradient(circle,rgba(0,240,255,.13),transparent 62%);
+  pointer-events:none;
+}
+.micro-offer > span{
+  display:inline-flex;
+  width:max-content;
+  max-width:100%;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;
+  padding:.3rem .58rem;
+  color:var(--muted);
+  font-family:var(--mono);
+  font-size:.72rem;
+  text-transform:uppercase;
+}
+.micro-offer h3{
+  margin:.8rem 0 .35rem;
+  font-size:2rem;
+  color:var(--cyan);
+  letter-spacing:-.045em;
+}
+.micro-offer p{font-size:.94rem;color:var(--muted)}
+.price-note{
+  margin-top:1rem;
+  color:var(--muted);
+  border-left:3px solid var(--cyan);
+  padding:.78rem 1rem;
+  background:rgba(0,240,255,.055);
+  border-radius:0 16px 16px 0;
+}
+.price-card h3{display:flex;align-items:flex-end;gap:.28rem;flex-wrap:wrap}
+.footer a{color:var(--cyan)}
+.about__image picture{display:block;width:100%;height:100%}
+.about__image img{aspect-ratio:769/1100;object-fit:cover}
+.work__img[width][height]{height:100%;width:100%;object-fit:cover}
+@media (min-width:769px){
+  html.motion-on .micro-offer{animation:desktopSoftFloat 5.5s ease-in-out infinite alternate!important}
+  html.motion-on .micro-offer:nth-child(2){animation-delay:-1.4s!important}
+  html.motion-on .micro-offer:nth-child(3){animation-delay:-2.7s!important}
+}
+@media (max-width:1100px){.per-video-grid{grid-template-columns:1fr}}
+@media (max-width:430px){.micro-offer,.per-video-grid,.price-note{padding:1rem}.per-video-grid{gap:.75rem}}
+
+/* =========================================================
+   SALES-FIRST VISUAL PORTFOLIO UPDATE
+   Video focus, stamped prices, custom quote, category filters.
+   ========================================================= */
+.deal-strip{
+  margin:1.45rem 0 .55rem;
+  display:flex;
+  align-items:center;
+  gap:.85rem;
+  flex-wrap:wrap;
+  width:max-content;
+  max-width:100%;
+  border:1px solid rgba(0,240,255,.28);
+  background:linear-gradient(135deg,rgba(0,240,255,.12),rgba(255,0,85,.08));
+  border-radius:20px;
+  padding:.78rem .95rem;
+  box-shadow:0 18px 55px rgba(0,240,255,.1);
+}
+.deal-strip__kicker,.price-anchor small{
+  font-family:var(--mono);
+  font-size:.72rem;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+.deal-strip strong{
+  color:#fff;
+  font-size:clamp(2rem,4.2vw,3.5rem);
+  line-height:.9;
+  letter-spacing:-.08em;
+  text-shadow:0 0 22px rgba(0,240,255,.38);
+}
+.deal-strip small{color:#d4daea}
+.visual-offer-banner,.per-video-hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  border:1px solid rgba(0,240,255,.22);
+  background:linear-gradient(135deg,rgba(0,240,255,.09),rgba(255,255,255,.045));
+  border-radius:var(--radius);
+  padding:1.15rem;
+  box-shadow:0 22px 70px rgba(0,0,0,.28);
+  position:relative;
+  overflow:hidden;
+  margin-bottom:1.55rem;
+}
+.per-video-hero{margin-bottom:1.2rem;background:linear-gradient(135deg,rgba(255,0,85,.12),rgba(0,240,255,.08))}
+.visual-offer-banner::after,.per-video-hero::after{
+  content:"";
+  position:absolute;
+  inset:-50% -20% auto auto;
+  width:28rem;
+  height:28rem;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(0,240,255,.18),transparent 62%);
+  pointer-events:none;
+}
+.visual-offer-banner h3,.per-video-hero h3{font-size:clamp(1.35rem,2.5vw,2.2rem);letter-spacing:-.045em;margin-bottom:.35rem}
+.visual-offer-banner b,.per-video-hero b{color:var(--cyan);font-size:1.2em;text-shadow:0 0 18px rgba(0,240,255,.25)}
+.filter-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.65rem;
+  margin:1rem 0 1.1rem;
+}
+.filter-chip{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  color:var(--muted);
+  border-radius:999px;
+  min-height:42px;
+  padding:.55rem .82rem;
+  cursor:pointer;
+  font-family:var(--mono);
+  font-size:.75rem;
+  transition:transform .22s,border-color .22s,color .22s,background .22s,box-shadow .22s;
+}
+.filter-chip:hover,.filter-chip.active{
+  transform:translateY(-2px);
+  border-color:rgba(0,240,255,.55);
+  color:var(--cyan);
+  background:rgba(0,240,255,.08);
+  box-shadow:0 12px 34px rgba(0,240,255,.08);
+}
+.gallery--video .work__card:nth-child(1){grid-column:span 2;grid-row:span 2}
+.is-filtered-out{display:none!important}
+.video-price-badge,.design-price-badge{
+  position:absolute;
+  right:.75rem;
+  top:.75rem;
+  z-index:6;
+  border:1px solid rgba(37,211,102,.55);
+  background:rgba(2,2,4,.72);
+  backdrop-filter:blur(10px);
+  color:#fff;
+  border-radius:999px;
+  padding:.36rem .62rem;
+  font-family:var(--mono);
+  display:flex;
+  align-items:baseline;
+  gap:.25rem;
+  box-shadow:0 12px 30px rgba(0,0,0,.28),0 0 18px rgba(37,211,102,.12);
+}
+.video-price-badge strong{color:var(--green);font-size:.86rem}.video-price-badge span{color:var(--muted);font-size:.62rem}.design-price-badge{font-size:.72rem;color:var(--green)}
+.design-card__label{
+  position:absolute;
+  left:.75rem;
+  top:.75rem;
+  z-index:6;
+  border:1px solid rgba(0,240,255,.45);
+  background:rgba(2,2,4,.62);
+  backdrop-filter:blur(10px);
+  color:var(--cyan);
+  border-radius:999px;
+  padding:.34rem .55rem;
+  font-family:var(--mono);
+  font-size:.62rem;
+  max-width:calc(100% - 6.8rem);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.portfolio-card-copy{
+  position:absolute;
+  left:.75rem;
+  right:.75rem;
+  bottom:.75rem;
+  z-index:6;
+  display:grid;
+  gap:.18rem;
+  padding:.72rem;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(2,2,4,.32),rgba(2,2,4,.78));
+  backdrop-filter:blur(10px);
+  transform:translate3d(0,8px,0);
+  opacity:.88;
+  transition:transform .24s,opacity .24s,border-color .24s;
+}
+.portfolio-card-copy strong{font-size:.9rem;line-height:1.1}.portfolio-card-copy span{font-size:.74rem;color:var(--muted);line-height:1.28}
+.work__card:hover .portfolio-card-copy{transform:translate3d(0,0,0);opacity:1;border-color:rgba(0,240,255,.28)}
+.video-card .big-play{width:58px;height:58px}.gallery--video .work__card:nth-child(1) .big-play{width:78px;height:78px}
+.price-anchor{display:flex;align-items:center;gap:.55rem;color:var(--muted);margin-bottom:-.45rem}
+.price-anchor s{color:var(--muted2);font-family:var(--mono);font-size:1rem}.price-card--hot .price-anchor s{color:#fff}
+.pricing--sales .price-card h3{font-size:clamp(2.15rem,4vw,3rem)}
+.micro-offer--hot{border-color:rgba(37,211,102,.48);background:linear-gradient(145deg,rgba(37,211,102,.1),rgba(0,240,255,.06))}
+.contact-option--custom{border-color:rgba(138,43,226,.55);background:rgba(138,43,226,.09)}
+.contact-option--custom i{color:var(--purple)}
+.per-video-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (min-width:1280px){.gallery--video{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:1100px){
+  .visual-offer-banner,.per-video-hero{align-items:flex-start;flex-direction:column}
+  .per-video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gallery--video .work__card:nth-child(1){grid-column:span 2;grid-row:span 1}
+}
+@media (max-width:768px){
+  .deal-strip{width:100%;align-items:flex-start;flex-direction:column;gap:.35rem}.deal-strip strong{font-size:3rem}
+  .filter-row{overflow-x:auto;flex-wrap:nowrap;padding-bottom:.25rem;scrollbar-width:none}.filter-row::-webkit-scrollbar{display:none}.filter-chip{flex:0 0 auto}
+  .gallery--video .work__card:nth-child(1){grid-column:auto;grid-row:auto}
+  .portfolio-card-copy{padding:.62rem}.portfolio-card-copy strong{font-size:.82rem}.portfolio-card-copy span{font-size:.68rem}
+  .video-price-badge,.design-price-badge{font-size:.68rem;right:.55rem;top:.55rem}.video-card__label,.design-card__label{left:.55rem;top:.55rem;max-width:calc(100% - 6.2rem)}
+}
+@media (max-width:560px){.per-video-grid{grid-template-columns:1fr}}
+
+/* =========================================================
+   REAL VIDEO CATEGORIZATION UPDATE
+   Uses the supplied YouTube list as a sales-focused showcase.
+   ========================================================= */
+.video-card--featured{
+  border-color:rgba(37,211,102,.45);
+  box-shadow:0 18px 55px rgba(37,211,102,.08),0 0 0 1px rgba(0,240,255,.08) inset;
+}
+.video-card--featured::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 20% 20%,rgba(37,211,102,.18),transparent 35%),radial-gradient(circle at 80% 10%,rgba(0,240,255,.16),transparent 34%);
+  pointer-events:none;
+  z-index:1;
+}
+.video-featured-badge{
+  position:absolute;
+  left:.75rem;
+  top:2.85rem;
+  z-index:6;
+  border:1px solid rgba(37,211,102,.55);
+  background:rgba(2,2,4,.72);
+  color:var(--green);
+  border-radius:999px;
+  padding:.3rem .52rem;
+  font-family:var(--mono);
+  font-size:.58rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  box-shadow:0 12px 30px rgba(0,0,0,.28),0 0 20px rgba(37,211,102,.14);
+}
+.video-skill-row{
+  display:flex;
+  align-items:center;
+  gap:.28rem;
+  flex-wrap:wrap;
+  margin-top:.28rem;
+}
+.video-skill-row span{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  color:#dce7ff;
+  border-radius:999px;
+  padding:.2rem .42rem;
+  font-family:var(--mono);
+  font-size:.58rem;
+  line-height:1;
+}
+.gallery--video .video-card--featured:nth-child(1) .portfolio-card-copy strong{
+  font-size:1.05rem;
+}
+.gallery--video .video-card--featured:nth-child(1) .portfolio-card-copy span{
+  font-size:.78rem;
+}
+@media (max-width:768px){
+  .video-featured-badge{left:.55rem;top:2.45rem;font-size:.52rem;padding:.25rem .42rem}
+  .video-skill-row{gap:.2rem}.video-skill-row span{font-size:.52rem;padding:.18rem .34rem}
+}

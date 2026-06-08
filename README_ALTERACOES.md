@@ -1,59 +1,54 @@
-# Gao Site — versão impecável desktop/mobile
+# Alterações — versão focada em vídeo, venda e categorias reais
 
-Arquivos principais:
-- index.html
-- style.css
-- script.js
-- gallery-data.js
-- videos.txt
-- robots.txt
-- sitemap.xml
+## Estratégia de venda aplicada
+- O vídeo avulso aparece como entrada de baixo risco: **from $29+ / video**.
+- Os preços ficam estampados nos cards para o cliente não precisar procurar valor.
+- Pacote mensal usa ancoragem: mostra o valor separado e o custo menor por vídeo.
+- Projetos complexos usam CTA direto para orçamento personalizado no WhatsApp.
+- A página prioriza prova visual primeiro: vídeos aparecem antes de design e antes de explicações longas.
 
-O que foi melhorado:
-- Layout desktop mais premium, com hero em shell/glass, grid melhor e largura controlada.
-- Mobile mantido responsivo e leve.
-- Animações mais suaves usando principalmente transform, opacity e CSS variables.
-- Cards de portfólio mais bonitos, com previews low-FPS para YouTube.
-- Lightbox com autoplay apenas ao clicar, mantendo performance.
-- SEO reforçado com title/description melhores, hreflang, robots avançado, Open Graph, Twitter Cards e JSON-LD para WebSite, Person/ProfessionalService, ofertas e FAQ.
-- Conteúdo mais vendedor: copy de conversão, pacotes claros, prova, processo, FAQ e CTA com briefing.
+## Vídeos categorizados com base na lista enviada
+A vitrine principal agora usa nomes reais e descrição de habilidade para cada URL:
+- **Best Edit — Horror Games Video Essay**: video essay PT-BR com 3D, VFX, motion e retenção.
+- **Purple Guy FNAF**: pixel art + 3D + After Effects.
+- **KinitoPET Lore**: TikTok/lore com 3D, VFX e VRChat.
+- **Death Note**: motion manga.
+- **It's Been So Long**: motion + pixel art.
+- **Rentune / Fears to Fathom**: narrativa de jogo.
+- **agoodgamer / Mouse PI For Hire**: YouTube gaming/platinum.
+- **Backrooms: Escape Together**: gameplay/horror.
+- **Quest 2 VR**: TikTok tech/VR.
+- **WoW Corrupted Blood**: TikTok lore/explainer.
+- **Reflective Story Video**: edição narrativa limpa.
 
-Como instalar:
-1. Substitua index.html, style.css, script.js e gallery-data.js no servidor.
-2. Mantenha sua pasta imagens/ no mesmo nível do index.html.
-3. Edite videos.txt para mudar a ordem dos vídeos, depois gere/atualize gallery-data.js se seu fluxo já faz isso.
-4. Envie robots.txt e sitemap.xml para a raiz do domínio.
+## Filtros de vídeo
+- All videos
+- Best proof
+- TikTok/Shorts
+- Video essays/lore
+- Gaming
+- Motion/3D/VFX
 
-Atualizar vídeos e imagens automaticamente:
-- Coloque os links no videos.txt, um por linha.
-- Coloque imagens novas dentro da pasta imagens/.
-- Rode: `python atualizar_gallery.py`
-- O arquivo gallery-data.js será recriado com a ordem correta dos vídeos e todas as imagens encontradas.
+Um vídeo pode aparecer em mais de uma categoria. Exemplo: o vídeo de terror entra em Featured, YouTube, Essay, Gaming e Motion.
 
-## Correção PC — animações estáticas
+## Design separado por função
+As imagens foram separadas pela função que vendem:
+- **Thumbnail**: imagens 16:9 feitas para clique.
+- **Cover / Social**: capas e artes quadradas.
+- **Identity / Character**: avatar, personagem, mascote e identidade de criador.
+- **Brand / Graphic**: logo, banner, ícone e title card.
 
-Nesta versão as animações do desktop foram corrigidas para não dependerem do `prefers-reduced-motion` do sistema operacional. Antes, se o Windows/navegador estivesse com redução de movimento ativada, o CSS desligava tudo e o site parecia parado no PC.
+## Performance
+- Mantido o carregamento lazy para galeria.
+- Thumbnails do YouTube usam `maxresdefault` com fallback para `hqdefault`.
+- Previews em vídeo continuam carregando só quando visíveis/hover, com limite de iframes ativos.
+- Imagens do portfólio continuam otimizadas em WebP com fallback para PNG.
 
-Mudanças aplicadas:
-- Motion ligado por padrão com `html.motion-on`.
-- `?motion=off` continua disponível caso você queira modo sem animações.
-- JS com `sessionStorage` blindado para não quebrar o script inteiro.
-- Fallback para revelar seções mesmo se o `IntersectionObserver` falhar.
-- Camada extra `desktop-fx` com partículas leves no PC.
-- Reforço CSS com `!important` nas animações principais do desktop.
-- Script pequeno no `<head>` para ativar animação antes do CSS carregar.
-
-Para testar no PC:
-1. Suba todos os arquivos da pasta mantendo os nomes `index.html`, `style.css`, `script.js` e `gallery-data.js`.
-2. Limpe cache do navegador com Ctrl + F5.
-3. Confirme que a URL não está com `?motion=off`.
-
-
-## Atualização — previews suaves e otimizadas
-
-- Removido o visual de preview low-FPS baseado em troca de thumbnails.
-- Agora os cards de vídeo usam preview real e suave do YouTube em iframe mudo.
-- Os players são carregados de forma preguiçosa: só quando o card aparece na tela, recebe hover ou foco.
-- O site limita a quantidade de previews ativas ao mesmo tempo para não travar: até 4 no desktop e 1 no mobile.
-- Em conexão lenta, modo economia de dados ou `?motion=off`, o site volta para thumbnail estática otimizada.
-- O vídeo completo ainda abre no lightbox somente ao clicar, com autoplay.
+## Arquivos principais editados
+- `index.html`
+- `style.css`
+- `script.js`
+- `gallery-data.js`
+- `videos.txt`
+- `build_portfolio.py`
+- `atualizar_gallery.py`
