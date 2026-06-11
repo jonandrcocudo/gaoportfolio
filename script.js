@@ -465,35 +465,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupOptimizedVideoPreviews();
 
 
-  /* Presentation YouTube video: autoplay muted when it enters the screen */
-  const presentationBox = $('#presentation-youtube');
-  let presentationLoaded = false;
-
-  function loadPresentationVideo(){
-    if(!presentationBox || presentationLoaded) return;
-    const id = youtubeId(presentationBox.dataset.youtubeUrl || '');
-    if(!id) return;
-    presentationLoaded = true;
-    presentationBox.classList.add('is-loaded');
-    presentationBox.innerHTML = `<iframe title="Gao presentation video" src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=1&playsinline=1&rel=0&modestbranding=1&loop=1&playlist=${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-  }
-
-  if(presentationBox){
-    if('IntersectionObserver' in window){
-      const presentationObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting && entry.intersectionRatio > 0.35){
-            loadPresentationVideo();
-            presentationObserver.disconnect();
-          }
-        });
-      }, {threshold:[0,.35,.65], rootMargin:'80px 0px'});
-      presentationObserver.observe(presentationBox);
-    }else{
-      presentationBox.addEventListener('click', loadPresentationVideo, {once:true});
-    }
-  }
-
   /* Reveal observer after dynamic gallery exists */
   const reveals = $$('.reveal');
   if(reduced){
