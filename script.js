@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const desc = document.querySelector('meta[name="description"]');
     if(desc){
       desc.content = isPt
-        ? 'Contrate Gao (@gaoeditor) para YouTube, TikTok, Shorts, gaming, lore, motion manga, 3D/VFX e thumbnails. Vídeos avulsos a partir de $29 e orçamento personalizado.'
-        : 'Hire Gao (@gaoeditor) for YouTube videos, TikToks, Shorts, motion manga, gaming edits, lore videos, 3D/VFX and thumbnails. Single videos from $29, custom quotes available.';
+        ? 'Contrate Gao (@gaoeditor) para YouTube, TikTok, Shorts, gaming, lore, motion manga, 3D/VFX e thumbnails. Orçamentos privados depois do briefing.'
+        : 'Hire Gao (@gaoeditor) for YouTube videos, TikToks, Shorts, motion manga, gaming edits, lore videos, 3D/VFX and thumbnails. Private quotes after the brief.';
     }
   }
 
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* Typing animation */
   const typingLine = $('#typing-line');
-  const phrases = ['editing hooks...', 'pricing one video...', 'syncing motion...', 'building retention...', 'polishing thumbnails...', 'rendering premium visuals...'];
+  const phrases = ['editing hooks...', 'reading brief...', 'syncing motion...', 'building retention...', 'polishing thumbnails...', 'rendering premium visuals...'];
   let phraseIndex = 0;
   let charIndex = 0;
   let deleting = false;
@@ -176,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const categories = Array.isArray(item.categories) && item.categories.length ? item.categories : [rawCategory];
     const category = escapeHTML(rawCategory);
     const platform = escapeHTML(item.platform || 'Video edit');
-    const price = escapeHTML(item.price || 'from $29');
     const caption = escapeHTML(item.caption || 'Click to watch the full edit.');
     const isFeatured = categories.includes('featured');
     const skillTags = Array.isArray(item.skills) ? item.skills.slice(0, 5).map(skill => `<span>${escapeHTML(skill)}</span>`).join('') : '';
@@ -209,7 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="video-card__scan"></div>
       <div class="video-card__label">${platform}</div>
       ${featuredBadge}
-      <div class="video-price-badge"><strong>${price}</strong><span>/ video</span></div>
       <div class="portfolio-card-copy">
         <strong>${title}</strong>
         <span>${caption}</span>
@@ -220,7 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ` : `
       <div class="work__img"></div>
       ${featuredBadge}
-      <div class="video-price-badge"><strong>${price}</strong><span>/ video</span></div>
       <div class="portfolio-card-copy"><strong>${title}</strong><span>${caption}</span>${skills}</div>
       <div class="big-play" aria-hidden="true"><i class="fas fa-play"></i></div>
       <div class="work__overlay"></div>
@@ -242,14 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = escapeHTML(item.title || cleanAlt(item.fallback || item.src, 'Design'));
     const label = escapeHTML(item.label || item.category || 'Design');
     const desc = escapeHTML(item.description || 'Visual asset by Gao');
-    const price = escapeHTML(item.price || 'from $15');
     const src = escapeHTML(item.src);
     const fallback = escapeHTML(item.fallback || item.src);
     const sizeAttrs = item.width && item.height ? ` width="${escapeHTML(item.width)}" height="${escapeHTML(item.height)}"` : '';
     card.innerHTML = `
       <img src="${src}" alt="${alt}" class="work__img" loading="lazy" decoding="async"${sizeAttrs} onerror="this.onerror=null;this.src='${fallback}'">
       <div class="design-card__label">${label}</div>
-      <div class="design-price-badge">${price}</div>
       <div class="portfolio-card-copy portfolio-card-copy--design">
         <strong>${title}</strong>
         <span>${desc}</span>

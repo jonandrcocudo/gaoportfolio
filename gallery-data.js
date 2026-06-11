@@ -11,7 +11,6 @@ window.GAO_VIDEOS = [
       "gaming"
     ],
     "platform": "Featured YouTube Essay",
-    "price": "from $149",
     "caption": "One of my strongest edits: PT-BR horror games essay with 3D, VFX, motion, pacing and storytelling.",
     "skills": [
       "3D",
@@ -32,7 +31,6 @@ window.GAO_VIDEOS = [
       "shorts"
     ],
     "platform": "Pixel Art / 3D / AE",
-    "price": "from $69",
     "caption": "FNAF edit mixing pixel art, 3D elements and After Effects motion for a premium horror-game look.",
     "skills": [
       "Pixel art",
@@ -52,7 +50,6 @@ window.GAO_VIDEOS = [
       "gaming"
     ],
     "platform": "TikTok Lore / VFX",
-    "price": "from $69",
     "caption": "Short-form lore video using 3D, VFX and VRChat style staging to make the story feel visual and weird.",
     "skills": [
       "3D",
@@ -71,7 +68,6 @@ window.GAO_VIDEOS = [
       "featured"
     ],
     "platform": "Motion Manga",
-    "price": "from $49",
     "caption": "Manga panels, dramatic movement, rhythm, cuts and sound sync made for anime-style retention.",
     "skills": [
       "Motion manga",
@@ -89,7 +85,6 @@ window.GAO_VIDEOS = [
       "gaming"
     ],
     "platform": "Pixel Art Motion",
-    "price": "from $49",
     "caption": "Pixel art and motion timing built around music, atmosphere and internet nostalgia.",
     "skills": [
       "Pixel art",
@@ -107,7 +102,6 @@ window.GAO_VIDEOS = [
       "gaming"
     ],
     "platform": "Game Story / YouTube",
-    "price": "from $119",
     "caption": "Narrative edit explaining the game story with pacing, structure, cuts and atmosphere for retention.",
     "skills": [
       "Story",
@@ -124,7 +118,6 @@ window.GAO_VIDEOS = [
       "gaming"
     ],
     "platform": "YouTube Gaming",
-    "price": "from $99",
     "caption": "Challenge/platinum-style YouTube video edit for agoodgamer, focused on clean pacing and watchability.",
     "skills": [
       "YouTube",
@@ -141,7 +134,6 @@ window.GAO_VIDEOS = [
       "youtube"
     ],
     "platform": "Gameplay / Horror",
-    "price": "from $59",
     "caption": "Gameplay edit for Backrooms: Escape Together with tension, cuts and atmosphere.",
     "skills": [
       "Gameplay",
@@ -158,7 +150,6 @@ window.GAO_VIDEOS = [
       "tech"
     ],
     "platform": "TikTok / Tech",
-    "price": "from $29",
     "caption": "Short tech content about Quest 2 VR: clear topic, fast delivery and social-friendly edit.",
     "skills": [
       "TikTok",
@@ -176,7 +167,6 @@ window.GAO_VIDEOS = [
       "gaming"
     ],
     "platform": "TikTok Lore",
-    "price": "from $39",
     "caption": "Short-form explainer about the corrupted blood epidemic in WoW, edited for curiosity and retention.",
     "skills": [
       "Lore",
@@ -193,7 +183,6 @@ window.GAO_VIDEOS = [
       "essay"
     ],
     "platform": "Narrative YouTube",
-    "price": "from $79",
     "caption": "More recording-focused and reflective, but organized with clean structure, pacing and visual clarity.",
     "skills": [
       "Narrative",
@@ -213,7 +202,6 @@ window.GAO_IMAGES = [
     "category": "brand",
     "label": "Brand / Icon",
     "description": "Tech/hacker cursor icon for profile, overlay or brand asset",
-    "price": "from $15",
     "fallback": "imagens/0ee6b8173442685.67c8b60b806f8.png"
   },
   {
@@ -225,7 +213,6 @@ window.GAO_IMAGES = [
     "category": "identity",
     "label": "Identity / Character",
     "description": "Red glitch character portrait for avatar or dark creator identity",
-    "price": "from $20",
     "fallback": "imagens/51e878173442685.67c8b60b7ecc7.png"
   },
   {
@@ -237,7 +224,6 @@ window.GAO_IMAGES = [
     "category": "brand",
     "label": "Logo / Graphic",
     "description": "Glitch-styled logo mark with strong contrast and internet energy",
-    "price": "from $20",
     "fallback": "imagens/7759e6173442685.67c8b60b801cf.png"
   },
   {
@@ -249,7 +235,6 @@ window.GAO_IMAGES = [
     "category": "identity",
     "label": "Identity / Character",
     "description": "Blue glitch character piece for creator branding and profile visuals",
-    "price": "from $25",
     "fallback": "imagens/colageno%20%281%29.png"
   },
   {
@@ -261,7 +246,6 @@ window.GAO_IMAGES = [
     "category": "cover",
     "label": "Cover / Social",
     "description": "Dark album-cover style artwork with premium mood and texture",
-    "price": "from $25",
     "fallback": "imagens/cover%20intenso%20album.png"
   },
   {
@@ -273,7 +257,6 @@ window.GAO_IMAGES = [
     "category": "brand",
     "label": "Brand / Banner",
     "description": "Tech-service banner with retro cyber aesthetic and readable offer",
-    "price": "from $25",
     "fallback": "imagens/Dedtech%20png%20transa.png"
   },
   {
@@ -285,7 +268,6 @@ window.GAO_IMAGES = [
     "category": "brand",
     "label": "Title / Graphic",
     "description": "Title card / professional graphic for portfolio or content branding",
-    "price": "from $25",
     "fallback": "imagens/designador%20%281%29.png"
   },
   {
@@ -297,7 +279,6 @@ window.GAO_IMAGES = [
     "category": "cover",
     "label": "Cover / Social",
     "description": "Surreal square artwork for social posts, covers or campaign visuals",
-    "price": "from $25",
     "fallback": "imagens/Dream.png"
   },
   {
@@ -309,7 +290,6 @@ window.GAO_IMAGES = [
     "category": "identity",
     "label": "Identity / Character",
     "description": "Masked avatar identity with neon/glitch creator personality",
-    "price": "from $25",
     "fallback": "imagens/gaojoia69.png"
   },
   {
@@ -321,7 +301,6 @@ window.GAO_IMAGES = [
     "category": "thumbnail",
     "label": "Thumbnail",
     "description": "Gaming thumbnail with clear character, title and action cue",
-    "price": "from $20",
     "fallback": "imagens/gunrun%20thumb.png"
   },
   {
@@ -333,7 +312,6 @@ window.GAO_IMAGES = [
     "category": "identity",
     "label": "Identity / Character",
     "description": "Creator avatar/mascot for channel identity and social presence",
-    "price": "from $25",
     "fallback": "imagens/jonan%20falante.png"
   },
   {
@@ -345,7 +323,6 @@ window.GAO_IMAGES = [
     "category": "thumbnail",
     "label": "Thumbnail",
     "description": "Narrative dark thumbnail built for curiosity and high click intent",
-    "price": "from $25",
     "fallback": "imagens/loucura%20superman%20tristesa.png"
   },
   {
@@ -357,7 +334,6 @@ window.GAO_IMAGES = [
     "category": "thumbnail",
     "label": "Thumbnail",
     "description": "Minecraft story thumbnail with emotional title and simple readable concept",
-    "price": "from $20",
     "fallback": "imagens/minecraft%20solitario.png"
   },
   {
@@ -369,7 +345,6 @@ window.GAO_IMAGES = [
     "category": "thumbnail",
     "label": "Thumbnail",
     "description": "Horror gaming thumbnail with glitch contrast and recognizable character focus",
-    "price": "from $25",
     "fallback": "imagens/teste%20fnaf.png"
   },
   {
@@ -381,7 +356,6 @@ window.GAO_IMAGES = [
     "category": "thumbnail",
     "label": "Thumbnail",
     "description": "Internet mystery/creepypasta-style thumbnail with strong glitch mood",
-    "price": "from $20",
     "fallback": "imagens/thumb%20coach.png"
   },
   {
@@ -393,7 +367,6 @@ window.GAO_IMAGES = [
     "category": "thumbnail",
     "label": "Thumbnail",
     "description": "Iceberg-style gaming thumbnail for mystery/lore videos",
-    "price": "from $20",
     "fallback": "imagens/thumb%20iceberg%20minecraft.png"
   },
   {
@@ -405,7 +378,6 @@ window.GAO_IMAGES = [
     "category": "thumbnail",
     "label": "Thumbnail",
     "description": "Anime/horror thumbnail with saturated colors and character emotion",
-    "price": "from $25",
     "fallback": "imagens/thumb%20project%20kat.png"
   }
 ];
