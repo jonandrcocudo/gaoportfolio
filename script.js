@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const desc = document.querySelector('meta[name="description"]');
     if(desc){
       desc.content = isPt
-        ? 'Contrate Gao (@gaoeditor) para YouTube, TikTok, Shorts, gaming, lore, motion manga, 3D/VFX e thumbnails. Orçamentos privados depois do briefing.'
-        : 'Hire Gao (@gaoeditor) for YouTube videos, TikToks, Shorts, motion manga, gaming edits, lore videos, 3D/VFX and thumbnails. Private quotes after the brief.';
+        ? 'Contrate Gao (@gaoeditor) para vídeos, shorts, gaming, motion, VFX e thumbnails. Escopo após briefing.'
+        : 'Hire Gao (@gaoeditor) for videos, shorts, gaming, motion, VFX and thumbnails. Scope after brief.';
     }
   }
 
@@ -65,8 +65,37 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMetaForLang(safe);
   }
 
-  setLang(urlLang || storage.get('gao_lang') || 'en');
-  langBtn?.addEventListener('click', () => setLang((root.dataset.currentLang || 'en') === 'en' ? 'pt' : 'en'));
+  const savedLang = storage.get('gao_lang');
+  setLang(urlLang || savedLang || 'pt');
+  langBtn?.addEventListener('click', () => setLang((root.dataset.currentLang || 'pt') === 'en' ? 'pt' : 'en'));
+
+  /* Language gate: first thing visitors choose when entering */
+  const languageGate = $('#language-gate');
+  const languageChoices = $$('[data-choose-lang]');
+
+  function openLanguageGate(){
+    if(!languageGate) return;
+    languageGate.classList.add('show');
+    languageGate.setAttribute('aria-hidden','false');
+    document.body.classList.add('language-gate-open');
+  }
+
+  function closeLanguageGate(){
+    languageGate?.classList.remove('show');
+    languageGate?.setAttribute('aria-hidden','true');
+    document.body.classList.remove('language-gate-open');
+  }
+
+  if(!urlLang && !savedLang){
+    setTimeout(openLanguageGate, 620);
+  }
+
+  languageChoices.forEach(btn => {
+    btn.addEventListener('click', () => {
+      setLang(btn.dataset.chooseLang === 'en' ? 'en' : 'pt');
+      closeLanguageGate();
+    });
+  });
 
   /* Header + mobile menu */
   const header = $('.header');
@@ -435,6 +464,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupOptimizedVideoPreviews();
 
+
+  /* Presentation YouTube video: autoplay muted when it enters the screen */
+  const presentationBox = $('#presentation-youtube');
+  let presentationLoaded = false;
+
+  function loadPresentationVideo(){
+    if(!presentationBox || presentationLoaded) return;
+    const id = youtubeId(presentationBox.dataset.youtubeUrl || '');
+    if(!id) return;
+    presentationLoaded = true;
+    presentationBox.classList.add('is-loaded');
+    presentationBox.innerHTML = `<iframe title="Gao presentation video" src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=1&playsinline=1&rel=0&modestbranding=1&loop=1&playlist=${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  }
+
+  if(presentationBox){
+    if('IntersectionObserver' in window){
+      const presentationObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting && entry.intersectionRatio > 0.35){
+            loadPresentationVideo();
+            presentationObserver.disconnect();
+          }
+        });
+      }, {threshold:[0,.35,.65], rootMargin:'80px 0px'});
+      presentationObserver.observe(presentationBox);
+    }else{
+      presentationBox.addEventListener('click', loadPresentationVideo, {once:true});
+    }
+  }
+
   /* Reveal observer after dynamic gallery exists */
   const reveals = $$('.reveal');
   if(reduced){
@@ -554,6 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeMenu();
       closeLightbox();
       closeContact();
+      closeLanguageGate();
     }
   });
 

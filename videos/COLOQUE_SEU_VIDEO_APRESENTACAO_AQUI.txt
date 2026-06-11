@@ -1,0 +1,7 @@
+Coloque seu vídeo apresentação nesta pasta com o nome:
+video-apresentacao.mp4
+
+O site já tem uma seção pronta apontando para:
+videos/video-apresentacao.mp4
+
+Formato recomendado: vertical 9:16, 35 a 55 segundos, MP4 H.264.

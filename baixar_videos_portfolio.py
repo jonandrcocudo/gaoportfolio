@@ -67,6 +67,9 @@ def extract_urls(files: list[Path]) -> list[str]:
         text = file.read_text(encoding="utf-8", errors="ignore")
         for match in YOUTUBE_RE.findall(text):
             url = normalize_youtube_url(match)
+            # Ignore editable placeholders until you paste a real YouTube URL.
+            if any(token in url.upper() for token in ("COLOQUE", "SUBSTITUA", "REPLACE", "YOUTUBE_ID")):
+                continue
             if url and url not in seen:
                 seen.add(url)
                 urls.append(url)
