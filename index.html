@@ -36,15 +36,19 @@
 <link href="https://cdnjs.cloudflare.com" rel="preconnect"/>
 <link href="https://img.youtube.com" rel="preconnect"/>
 <link href="https://www.youtube.com" rel="dns-prefetch"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=DM+Mono:wght@400;500&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
 <link as="image" fetchpriority="high" href="imagens/optimized/20260430-194126.webp" rel="preload" type="image/webp"/>
 <script>
-    // PC animations ON by default, even when the desktop OS has reduced-motion enabled.
-    // Add ?motion=off to the URL only when you intentionally want still mode.
+    // Respect the visitor's reduced-motion preference. ?motion=on is an
+    // intentional opt-in; ?motion=off always keeps the presentation still.
     (function(){
       var off = false;
-      try { off = new URLSearchParams(location.search).get('motion') === 'off'; } catch(e) {}
+      try {
+        var motion = new URLSearchParams(location.search).get('motion');
+        var prefersStill = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        off = motion === 'off' || (motion !== 'on' && prefersStill);
+      } catch(e) {}
       document.documentElement.classList.toggle('motion-on', !off);
       document.documentElement.classList.toggle('motion-reduced', off);
       document.documentElement.dataset.motion = off ? 'off' : 'on';
@@ -206,6 +210,7 @@
 </div>
 </div>
 
+<div aria-hidden="true" class="grain"></div>
 <div aria-hidden="true" class="bg">
 <div class="bg__orb bg__orb--cyan"></div>
 <div class="bg__orb bg__orb--pink"></div>
@@ -215,6 +220,7 @@
 <div class="bg__stars" id="bg-stars"></div>
 <div class="bg__rings"></div>
 <div class="bg__comets" id="bg-comets"></div>
+<div class="bg__particles" id="bg-particles"></div>
 </div>
 <header class="header" id="top">
 <nav aria-label="Main navigation" class="nav container">
@@ -229,6 +235,7 @@
 <a class="nav__link" href="#contact"><span data-lang="en">Contact</span><span data-lang="pt">Contato</span></a>
 </div>
 <div class="nav__actions">
+<span class="hud-tc" id="hud-timecode"><i></i><b>00:00:00:00</b></span>
 <button aria-label="Switch language" class="lang" id="lang-btn" type="button">EN/PT</button>
 <a class="nav__cta contact-choice-trigger" href="#"><span data-lang="en">Get quote</span><span data-lang="pt">Orçamento</span></a>
 <button aria-expanded="false" aria-label="Open menu" class="nav__toggle" id="nav-toggle" type="button"><i aria-hidden="true" class="fas fa-bars"></i></button>
@@ -243,6 +250,26 @@
 <span class="shape shape--three"></span>
 </div>
 <div class="container hero__grid hero-shell">
+<div aria-hidden="true" class="hero-reel" id="hero-reel">
+<div class="hero-reel__row hero-reel__row--one">
+<figure><img alt="" decoding="async" src="imagens/optimized/gunrun-thumb.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/jonan-falante.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/loucura-superman-tristesa.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/teste-fnaf.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/gunrun-thumb.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/jonan-falante.webp"/></figure>
+</div>
+<div class="hero-reel__row hero-reel__row--two">
+<figure><img alt="" decoding="async" src="imagens/optimized/minecraft-solitario.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/thumb-iceberg-minecraft.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/cover-intenso-album.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/dedtech-png-transa.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/minecraft-solitario.webp"/></figure>
+<figure><img alt="" decoding="async" src="imagens/optimized/thumb-iceberg-minecraft.webp"/></figure>
+</div>
+<span class="hero-reel__label hero-reel__label--top">SELECTED_FRAMES / GAO_ARCHIVE</span>
+<span class="hero-reel__label hero-reel__label--bottom">PLAYHEAD / LIVE</span>
+</div>
 <div class="hero__copy reveal">
 <p class="eyebrow">VIDEO-FIRST PORTFOLIO // EDITING // THUMBNAILS // VISUAL CONTENT</p>
 <h1>
@@ -250,8 +277,8 @@
 <span data-lang="pt">Vídeos premium para marcas e creators.</span>
 </h1>
 <p class="hero__lead">
-<span data-lang="en">Retention, motion, subtitles and sound. Send the brief, I build the scope.</span>
-<span data-lang="pt">Retenção, motion, legendas e som. Você manda o briefing, eu monto o escopo.</span>
+<span data-lang="en">Video that holds attention. Motion that gives the idea a shape.</span>
+<span data-lang="pt">Vídeo que segura atenção. Motion que dá forma para a ideia.</span>
 </p>
 <div aria-label="Private scope after brief" class="deal-strip reveal">
 <span class="deal-strip__kicker"><span data-lang="en">Brief first</span><span data-lang="pt">Briefing</span></span>
@@ -274,17 +301,30 @@
 </div>
 </div>
 <div class="hero__panel reveal">
-<div class="terminal">
-<div class="terminal__top"><span></span><span></span><span></span></div>
-<div class="terminal__body">
-<p><b>Gao.editVisual()</b></p>
-<p class="typing" id="typing-line">loading visual content engine...</p>
-<div aria-hidden="true" class="terminal__bars">
-<span style="--w:96%"></span>
-<span style="--w:84%"></span>
-<span style="--w:91%"></span>
+<div class="deck" id="hero-deck">
+<div class="deck__bezel">
+<span class="deck__rec"><i></i>REC</span>
+<span class="deck__tc" id="deck-timecode">00:00:00:00</span>
+<span class="deck__res">4K // 23.976fps</span>
 </div>
-<p class="terminal__muted">HOOK // CUT // CAPTION // MOTION // SOUND // THUMB</p>
+<div class="deck__stage">
+<div class="deck__row"><b>V2</b>
+<div class="deck__track"><span class="clip" style="--w:100%">GAO.EDITVISUAL()</span></div>
+</div>
+<div class="deck__row"><b>V1</b>
+<div class="deck__track">
+<span class="clip" style="--w:38%">HOOK</span>
+<span class="clip clip--b" style="--w:26%">CUT</span>
+<span class="clip clip--c" style="--w:20%">VFX</span>
+</div>
+</div>
+<div class="deck__row"><b>A1</b>
+<div class="deck__track deck__track--wave" aria-hidden="true" id="deck-wave"></div>
+</div>
+<div class="deck__playhead"></div>
+<p class="deck__track--txt">HOOK // CUT // CAPTION // MOTION // SOUND // THUMB</p>
+</div>
+<div class="deck__bars"><div class="smpte"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
 </div>
 </div>
 <div aria-label="Editing focus metrics" class="mini-metrics">
@@ -317,6 +357,90 @@
 <span style="--i:3">PACING</span>
 <span style="--i:4">THUMBS</span>
 <span style="--i:5">RETENTION</span>
+</div>
+</section>
+<section class="signal-wall section-pad" id="signal-wall">
+<div class="container">
+<div class="signal-wall__head reveal">
+<div>
+<p class="eyebrow">EDIT_SIGNAL_WALL // LIVE_ARCHIVE</p>
+<h2><span data-lang="en">A moving wall of worlds, not a normal grid.</span><span data-lang="pt">Uma parede de universos, não uma grade comum.</span></h2>
+</div>
+<p><span data-lang="en">A few frames from the archive, pulled into a living reel. Move the cursor across it and the whole edit bay shifts with you.</span><span data-lang="pt">Alguns frames do acervo, puxados para uma reel viva. Mova o cursor e toda a ilha de edição acompanha você.</span></p>
+</div>
+<div aria-label="Selected projects drifting through a three-dimensional editing wall" class="reel-stage reveal" id="reel-stage">
+<div aria-hidden="true" class="reel-stage__glow"></div>
+<div class="reel-row reel-row--a">
+<figure><img alt="Gaming video edit thumbnail" loading="lazy" src="imagens/optimized/gunrun-thumb.webp"/></figure>
+<figure><img alt="Motion manga project thumbnail" loading="lazy" src="imagens/optimized/jonan-falante.webp"/></figure>
+<figure><img alt="Video edit thumbnail" loading="lazy" src="imagens/optimized/loucura-superman-tristesa.webp"/></figure>
+<figure><img alt="Design project thumbnail" loading="lazy" src="imagens/optimized/designador-1.webp"/></figure>
+<figure><img alt="Gaming project thumbnail" loading="lazy" src="imagens/optimized/teste-fnaf.webp"/></figure>
+<figure><img alt="Gaming video edit thumbnail" loading="lazy" src="imagens/optimized/gunrun-thumb.webp"/></figure>
+<figure><img alt="Motion manga project thumbnail" loading="lazy" src="imagens/optimized/jonan-falante.webp"/></figure>
+<figure><img alt="Video edit thumbnail" loading="lazy" src="imagens/optimized/loucura-superman-tristesa.webp"/></figure>
+</div>
+<div class="reel-row reel-row--b">
+<figure><img alt="Creative video edit thumbnail" loading="lazy" src="imagens/optimized/minecraft-solitario.webp"/></figure>
+<figure><img alt="Thumbnail project" loading="lazy" src="imagens/optimized/thumb-iceberg-minecraft.webp"/></figure>
+<figure><img alt="Visual design thumbnail" loading="lazy" src="imagens/optimized/0ee6b8173442685-67c8b60b806f8.webp"/></figure>
+<figure><img alt="Creative project thumbnail" loading="lazy" src="imagens/optimized/cover-intenso-album.webp"/></figure>
+<figure><img alt="Video design thumbnail" loading="lazy" src="imagens/optimized/dedtech-png-transa.webp"/></figure>
+<figure><img alt="Creative video edit thumbnail" loading="lazy" src="imagens/optimized/minecraft-solitario.webp"/></figure>
+<figure><img alt="Thumbnail project" loading="lazy" src="imagens/optimized/thumb-iceberg-minecraft.webp"/></figure>
+<figure><img alt="Visual design thumbnail" loading="lazy" src="imagens/optimized/0ee6b8173442685-67c8b60b806f8.webp"/></figure>
+</div>
+<div class="reel-stage__overlay">
+<span>PLAYHEAD / 03:16:08:12</span>
+<span>ARCHIVE / GAO_2026</span>
+</div>
+</div>
+</div>
+</section>
+<section class="craft-lab section-pad section-pad--small" id="craft-lab">
+<div class="container">
+<div class="section-head reveal">
+<p class="eyebrow">CUT_SYSTEM // NOT_A_PRESET</p>
+<h2><span data-lang="en">Every edit has a control room.</span><span data-lang="pt">Toda edição tem uma sala de controle.</span></h2>
+<p><span data-lang="en">The work changes with the platform, audience and idea. These are the levers behind a video that feels made, not merely assembled.</span><span data-lang="pt">O trabalho muda com a plataforma, público e ideia. Estas são as alavancas por trás de um vídeo que parece criado, não só montado.</span></p>
+</div>
+<ul aria-label="Gao editing system" class="craft-grid">
+<li class="craft-card craft-card--hook reveal">
+<span class="craft-card__index">01 / ATTENTION</span>
+<div class="craft-card__glyph"><i aria-hidden="true" class="fas fa-bolt"></i></div>
+<h3><span data-lang="en">Hook architecture</span><span data-lang="pt">Arquitetura do hook</span></h3>
+<p><span data-lang="en">The first seconds make a promise: visual tension, a question or a clean reason to keep watching.</span><span data-lang="pt">Os primeiros segundos fazem uma promessa: tensão visual, pergunta ou um motivo limpo para continuar.</span></p>
+<small>00:00 → 00:03</small>
+</li>
+<li class="craft-card craft-card--pace reveal">
+<span class="craft-card__index">02 / RHYTHM</span>
+<div class="craft-card__glyph"><i aria-hidden="true" class="fas fa-wave-square"></i></div>
+<h3><span data-lang="en">Pacing with intent</span><span data-lang="pt">Ritmo com intenção</span></h3>
+<p><span data-lang="en">Cuts breathe when the idea needs weight, then tighten before attention can drift.</span><span data-lang="pt">Os cortes respiram quando a ideia precisa de peso e apertam antes que a atenção escape.</span></p>
+<small>BEAT / PAUSE / RELEASE</small>
+</li>
+<li class="craft-card craft-card--motion reveal">
+<span class="craft-card__index">03 / MOTION</span>
+<div class="craft-card__glyph"><i aria-hidden="true" class="fas fa-wand-magic-sparkles"></i></div>
+<h3><span data-lang="en">Motion that explains</span><span data-lang="pt">Motion que explica</span></h3>
+<p><span data-lang="en">Type, tracks and transitions give the viewer direction instead of decoration for decoration's sake.</span><span data-lang="pt">Tipo, tracks e transições dão direção para quem assiste, em vez de decoração pela decoração.</span></p>
+<small>MOVE / FRAME / EMPHASIZE</small>
+</li>
+<li class="craft-card craft-card--sound reveal">
+<span class="craft-card__index">04 / SOUND</span>
+<div class="craft-card__glyph"><i aria-hidden="true" class="fas fa-headphones"></i></div>
+<h3><span data-lang="en">Sound as a cut</span><span data-lang="pt">Som como corte</span></h3>
+<p><span data-lang="en">Impact, silence and texture are timed as deliberately as the footage itself.</span><span data-lang="pt">Impacto, silêncio e textura são cronometrados com o mesmo cuidado que a imagem.</span></p>
+<small>HIT / SPACE / MEMORY</small>
+</li>
+<li class="craft-card craft-card--system reveal">
+<span class="craft-card__index">05 / SCALE</span>
+<div class="craft-card__glyph"><i aria-hidden="true" class="fas fa-layer-group"></i></div>
+<h3><span data-lang="en">A system worth repeating</span><span data-lang="pt">Um sistema que vale repetir</span></h3>
+<p><span data-lang="en">When a format works, its visual rules can become a reliable machine for the next releases.</span><span data-lang="pt">Quando um formato funciona, suas regras visuais viram uma máquina confiável para os próximos lançamentos.</span></p>
+<small>TEST / LOCK / SCALE</small>
+</li>
+</ul>
 </div>
 </section>
 <section class="work section-pad" id="work">
@@ -542,5 +666,6 @@
 </div>
 <script src="gallery-data.js"></script>
 <script src="script.js"></script>
+<script src="interactions.js"></script>
 </body>
 </html>
