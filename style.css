@@ -1129,7 +1129,7 @@ html.motion-on .deck::after { animation: none !important; opacity: .18; }
 
 /* Respect reduced-motion settings and the explicit ?motion=off option. */
 @media (prefers-reduced-motion: reduce) {
-  html *, html *::before, html *::after {
+  html:not(.motion-on) *, html:not(.motion-on) *::before, html:not(.motion-on) *::after {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
