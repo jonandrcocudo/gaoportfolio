@@ -5,10 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const motionParam = params.get('motion');
 
   /*
-    Motion is ON by default.
-    Some desktop systems/browsers report prefers-reduced-motion and the old version
-    respected that globally, which made the PC version look completely static.
-    Use ?motion=off only when you intentionally want a still/accessibility mode.
+    Respect the visitor's OS motion preference by default.
+    ?motion=off forces still mode; ?motion=on is an intentional opt-in.
   */
   const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const reduced = motionParam === 'off' || (motionParam !== 'on' && prefersReducedMotion);
