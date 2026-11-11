@@ -10,17 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
     respected that globally, which made the PC version look completely static.
     Use ?motion=off only when you intentionally want a still/accessibility mode.
   */
-  const reduced = motionParam === 'off';
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = motionParam === 'off' || (motionParam !== 'on' && prefersReducedMotion);
   root.classList.toggle('motion-on', !reduced);
   root.classList.toggle('motion-reduced', reduced);
   root.dataset.motion = reduced ? 'off' : 'on';
 
   const isMobile = matchMedia('(max-width: 768px)').matches;
-  const finePointer = matchMedia('(pointer:fine)').matches;
 
   const storage = {
-    get(key){ try { return sessionStorage.getItem(key); } catch { return null; } },
-    set(key, value){ try { sessionStorage.setItem(key, value); } catch {} }
+    get(key){ try { return localStorage.getItem(key); } catch { return null; } },
+    set(key, value){ try { localStorage.setItem(key, value); } catch {} }
   };
 
   const $ = (sel, parent = document) => parent.querySelector(sel);
@@ -66,36 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const savedLang = storage.get('gao_lang');
-  setLang(urlLang || savedLang || 'pt');
+  setLang(urlLang || savedLang || 'en');
   langBtn?.addEventListener('click', () => setLang((root.dataset.currentLang || 'pt') === 'en' ? 'pt' : 'en'));
 
-  /* Language gate: first thing visitors choose when entering */
-  const languageGate = $('#language-gate');
-  const languageChoices = $$('[data-choose-lang]');
-
-  function openLanguageGate(){
-    if(!languageGate) return;
-    languageGate.classList.add('show');
-    languageGate.setAttribute('aria-hidden','false');
-    document.body.classList.add('language-gate-open');
+  function syncScrollLock(){
+    document.body.style.overflow = document.querySelector('.nav__menu.show-menu,.contact-choice-modal.show,.lightbox.show') ? 'hidden' : '';
   }
-
-  function closeLanguageGate(){
-    languageGate?.classList.remove('show');
-    languageGate?.setAttribute('aria-hidden','true');
-    document.body.classList.remove('language-gate-open');
-  }
-
-  if(!urlLang && !savedLang){
-    setTimeout(openLanguageGate, 620);
-  }
-
-  languageChoices.forEach(btn => {
-    btn.addEventListener('click', () => {
-      setLang(btn.dataset.chooseLang === 'en' ? 'en' : 'pt');
-      closeLanguageGate();
-    });
-  });
 
   /* Header + mobile menu */
   const header = $('.header');
@@ -107,14 +83,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!navMenu) return;
     navMenu.classList.add('show-menu');
     navToggle?.setAttribute('aria-expanded','true');
-    document.body.style.overflow = 'hidden';
+    syncScrollLock();
   };
 
   const closeMenu = () => {
     if(!navMenu) return;
     navMenu.classList.remove('show-menu');
     navToggle?.setAttribute('aria-expanded','false');
-    document.body.style.overflow = '';
+    syncScrollLock();
   };
 
   navToggle?.addEventListener('click', openMenu);
@@ -138,30 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, {passive:true});
   updateScrollUI();
-
-  /* Loader */
-  const loader = $('#page-loader');
-  setTimeout(() => loader?.classList.add('hidden'), 520);
-
-  /* Typing animation */
-  const typingLine = $('#typing-line');
-  const phrases = ['editing hooks...', 'reading brief...', 'syncing motion...', 'building retention...', 'polishing thumbnails...', 'rendering premium visuals...'];
-  let phraseIndex = 0;
-  let charIndex = 0;
-  let deleting = false;
-
-  function typeLoop(){
-    if(!typingLine || reduced) return;
-    const phrase = phrases[phraseIndex];
-    typingLine.textContent = deleting ? phrase.slice(0, charIndex--) : phrase.slice(0, charIndex++);
-    if(!deleting && charIndex > phrase.length + 8) deleting = true;
-    if(deleting && charIndex < 0){
-      deleting = false;
-      phraseIndex = (phraseIndex + 1) % phrases.length;
-    }
-    setTimeout(typeLoop, deleting ? 34 : 48);
-  }
-  typeLoop();
 
   /* Gallery */
   const videoGallery = $('#video-gallery');
@@ -224,8 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const thumb = id ? `https://i.ytimg.com/vi/${id}/maxresdefault.jpg` : '';
     const thumbFallback = id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
-    const loading = index < 3 ? 'eager' : 'lazy';
-    const fetchPriority = index < 3 ? 'high' : 'auto';
+    const loading = index === 0 ? 'eager' : 'lazy';
+    const fetchPriority = index === 0 ? 'high' : 'auto';
     const featuredBadge = isFeatured ? '<div class="video-featured-badge">Best proof</div>' : '';
     const skills = skillTags ? `<div class="video-skill-row">${skillTags}</div>` : '';
 
@@ -322,10 +274,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPortfolioFilters();
 
 
-  /* Smooth optimized video previews
-     - Real muted YouTube preview, not low-FPS thumbnail cycling.
-     - Lazy-loaded only when cards are visible or hovered.
-     - Limits active players to keep desktop/mobile fast.
+  /* Video previews: load only on desktop hover/focus.
+     Mobile and data-saver connections keep lightweight thumbnails and open
+     the full video only after a deliberate tap/click.
   */
   function setupOptimizedVideoPreviews(){
     const cards = $$('.video-card[data-youtube-id]');
@@ -335,174 +286,68 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveData = !!connection?.saveData;
     const slowConnection = /^(slow-2g|2g)$/.test(connection?.effectiveType || '');
 
-    // Keep the site optimized on weak connections. Poster still works instantly.
-    if(reduced || saveData || slowConnection){
+    if(isMobile || reduced || saveData || slowConnection){
       cards.forEach(card => card.classList.add('poster-only'));
       return;
     }
 
-    const maxActive = isMobile ? 1 : 4;
-    const active = new Map();
-    const visible = new Set();
-    let hoverCard = null;
-    let refreshTimer = 0;
+    let activeCard = null;
+    let leaveTimer = 0;
 
-    function unloadPreview(card){
+    function unload(card){
+      if(!card) return;
       const holder = card.querySelector('.video-preview-player');
-      if(holder) holder.textContent = '';
-      active.delete(card);
+      if(holder) holder.replaceChildren();
       card.classList.remove('preview-ready','preview-loading');
+      if(activeCard === card) activeCard = null;
     }
 
-    function unloadOldest(except){
-      let candidate = null;
-      let oldest = Infinity;
-      active.forEach((time, card) => {
-        if(card === except || card === hoverCard) return;
-        if(time < oldest){
-          oldest = time;
-          candidate = card;
-        }
-      });
-      if(!candidate && active.size){
-        candidate = active.keys().next().value;
-      }
-      if(candidate) unloadPreview(candidate);
-    }
-
-    function loadPreview(card, priority = false){
-      if(!card?.dataset.previewSrc || active.has(card)) return;
-      while(active.size >= maxActive) unloadOldest(card);
+    function load(card){
+      if(!card?.dataset.previewSrc || activeCard === card) return;
+      window.clearTimeout(leaveTimer);
+      if(activeCard) unload(activeCard);
 
       const holder = card.querySelector('.video-preview-player');
       if(!holder) return;
+
       card.classList.add('preview-loading');
       const iframe = document.createElement('iframe');
+      const title = card.querySelector('.portfolio-card-copy strong')?.textContent || 'video';
       iframe.src = card.dataset.previewSrc;
-      iframe.title = 'Muted optimized video preview';
-      iframe.loading = priority ? 'eager' : 'lazy';
+      iframe.title = 'Muted preview: ' + title;
+      iframe.loading = 'eager';
       iframe.tabIndex = -1;
-      iframe.setAttribute('aria-hidden', 'true');
-      iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      iframe.setAttribute('aria-hidden','true');
+      iframe.setAttribute('allow','autoplay; encrypted-media; picture-in-picture');
+      iframe.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
       iframe.addEventListener('load', () => {
         card.classList.remove('preview-loading');
         card.classList.add('preview-ready');
       }, {once:true});
+      iframe.addEventListener('error', () => unload(card), {once:true});
       holder.replaceChildren(iframe);
-      active.set(card, performance.now());
+      activeCard = card;
     }
 
-    function refreshVisiblePreviews(){
-      clearTimeout(refreshTimer);
-      refreshTimer = setTimeout(() => {
-        const sorted = [...visible]
-          .filter(card => card.isConnected)
-          .sort((a, b) => Math.abs(a.getBoundingClientRect().top) - Math.abs(b.getBoundingClientRect().top));
-
-        sorted.slice(0, maxActive).forEach((card, index) => {
-          const load = () => loadPreview(card, index === 0);
-          if('requestIdleCallback' in window){
-            requestIdleCallback(load, {timeout: 900});
-          }else{
-            setTimeout(load, index * 120);
-          }
-        });
-
-        active.forEach((_, card) => {
-          if(!visible.has(card) && card !== hoverCard) unloadPreview(card);
-        });
-      }, 80);
+    function scheduleUnload(card){
+      window.clearTimeout(leaveTimer);
+      leaveTimer = window.setTimeout(() => {
+        if(activeCard === card && document.activeElement !== card && !card.matches(':hover')) unload(card);
+      }, 240);
     }
 
-    if('IntersectionObserver' in window){
-      const previewObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          const card = entry.target;
-          if(entry.isIntersecting){
-            visible.add(card);
-            card.classList.add('preview-in-view');
-          }else{
-            visible.delete(card);
-            card.classList.remove('preview-in-view');
-            if(card !== hoverCard){
-              setTimeout(() => {
-                if(!visible.has(card) && card !== hoverCard) unloadPreview(card);
-              }, 450);
-            }
-          }
-        });
-        refreshVisiblePreviews();
-      }, {threshold:.25, rootMargin:'180px 0px'});
-      cards.forEach(card => previewObserver.observe(card));
-    }else{
-      // Fallback: no observer, only load on hover/focus.
-      cards.forEach(card => card.classList.add('poster-only'));
-    }
-
-    if(finePointer){
-      cards.forEach(card => {
-        card.addEventListener('pointerenter', () => {
-          hoverCard = card;
-          loadPreview(card, true);
-        }, {passive:true});
-        card.addEventListener('pointerleave', () => {
-          hoverCard = null;
-          refreshVisiblePreviews();
-        }, {passive:true});
-        card.addEventListener('focus', () => {
-          hoverCard = card;
-          loadPreview(card, true);
-        });
-        card.addEventListener('blur', () => {
-          hoverCard = null;
-          refreshVisiblePreviews();
-        });
-      });
-    }
+    cards.forEach(card => {
+      card.addEventListener('pointerenter', () => load(card), {passive:true});
+      card.addEventListener('pointerleave', () => scheduleUnload(card), {passive:true});
+      card.addEventListener('focusin', () => load(card));
+      card.addEventListener('focusout', () => scheduleUnload(card));
+    });
   }
 
   setupOptimizedVideoPreviews();
 
 
-  /* Reveal observer after dynamic gallery exists */
-  const reveals = $$('.reveal');
-  if(reduced){
-    reveals.forEach(el => el.classList.add('active'));
-  }else{
-    const activateVisible = () => {
-      reveals.forEach((el, i) => {
-        const r = el.getBoundingClientRect();
-        if(r.top < innerHeight * 0.92 && r.bottom > 0){
-          el.style.transitionDelay = `${Math.min(i % 5, 4) * 38}ms`;
-          el.classList.add('active');
-        }
-      });
-    };
 
-    if('IntersectionObserver' in window){
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting){
-            entry.target.classList.add('active');
-            io.unobserve(entry.target);
-          }
-        });
-      }, {threshold:.04, rootMargin:'0px 0px -20px 0px'});
-      reveals.forEach((el, i) => {
-        el.style.transitionDelay = `${Math.min(i % 5, 4) * 38}ms`;
-        io.observe(el);
-      });
-    }
-
-    requestAnimationFrame(activateVisible);
-    addEventListener('scroll', activateVisible, {passive:true});
-    addEventListener('resize', activateVisible, {passive:true});
-
-    // Watchdog: if a desktop browser fails the observer, the site still animates in.
-    setTimeout(activateVisible, 260);
-    setTimeout(() => reveals.forEach(el => el.classList.add('active')), 1600);
-  }
 
   /* Modal and lightbox */
   const lightbox = $('#lightbox');
@@ -525,14 +370,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     lightbox.classList.add('show');
     lightbox.setAttribute('aria-hidden','false');
-    document.body.style.overflow = 'hidden';
+    syncScrollLock();
   }
 
   function closeLightbox(){
     lightbox?.classList.remove('show');
     lightbox?.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
-    setTimeout(() => { if(lightboxBody) lightboxBody.innerHTML = ''; }, 180);
+    syncScrollLock();
+    setTimeout(() => { if(lightboxBody) lightboxBody.replaceChildren(); }, 180);
   }
 
   document.addEventListener('click', e => {
@@ -554,16 +399,16 @@ document.addEventListener('DOMContentLoaded', () => {
     e?.preventDefault();
     contactModal?.classList.add('show');
     contactModal?.setAttribute('aria-hidden','false');
-    document.body.style.overflow = 'hidden';
+    syncScrollLock();
   }
 
   function closeContact(){
     contactModal?.classList.remove('show');
     contactModal?.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
+    syncScrollLock();
   }
 
-  $$('.contact-choice-trigger').forEach(el => el.addEventListener('click', openContact));
+  $('.contact-choice-trigger').forEach(el => el.addEventListener('click', openContact));
   contactClose?.addEventListener('click', closeContact);
   contactModal?.addEventListener('click', e => { if(e.target === contactModal) closeContact(); });
 
@@ -584,125 +429,8 @@ document.addEventListener('DOMContentLoaded', () => {
       closeMenu();
       closeLightbox();
       closeContact();
-      closeLanguageGate();
     }
   });
 
-  if(reduced) return;
 
-  /* Desktop motion that stays cheap: transform, opacity and CSS variables only */
-  root.classList.add('motion-ready');
-
-  // Extra guaranteed desktop motion layer: pure CSS particles added by JS.
-  const desktopFx = !isMobile ? document.createElement('div') : null;
-  if(desktopFx){
-    desktopFx.className = 'desktop-fx';
-    desktopFx.setAttribute('aria-hidden', 'true');
-    const frag = document.createDocumentFragment();
-    for(let i = 0; i < 28; i++){
-      const dot = document.createElement('span');
-      dot.style.setProperty('--x', `${Math.random() * 100}%`);
-      dot.style.setProperty('--y', `${Math.random() * 100}%`);
-      dot.style.setProperty('--d', `${7 + Math.random() * 10}s`);
-      dot.style.setProperty('--delay', `${-Math.random() * 10}s`);
-      dot.style.setProperty('--s', `${0.6 + Math.random() * 1.8}`);
-      frag.appendChild(dot);
-    }
-    desktopFx.appendChild(frag);
-    document.body.appendChild(desktopFx);
-  }
-
-  const starLayer = $('#bg-stars');
-  if(starLayer && !isMobile){
-    const frag = document.createDocumentFragment();
-    for(let i = 0; i < 48; i++){
-      const s = document.createElement('span');
-      s.className = 'star';
-      s.style.left = Math.random() * 100 + '%';
-      s.style.top = Math.random() * 100 + '%';
-      s.style.animationDuration = (8 + Math.random() * 12) + 's';
-      s.style.animationDelay = (-Math.random() * 12) + 's';
-      frag.appendChild(s);
-    }
-    starLayer.appendChild(frag);
-  }
-
-  const comets = $('#bg-comets');
-  if(comets && !isMobile){
-    const frag = document.createDocumentFragment();
-    for(let i = 0; i < 7; i++){
-      const c = document.createElement('span');
-      c.className = 'comet';
-      c.style.top = (12 + Math.random() * 76) + '%';
-      c.style.left = (-20 - Math.random() * 50) + '%';
-      c.style.animationDuration = (6 + Math.random() * 9) + 's';
-      c.style.animationDelay = (-Math.random() * 10) + 's';
-      frag.appendChild(c);
-    }
-    comets.appendChild(frag);
-  }
-
-  $$('.price-card, .micro-offer, .step, .stat, .faq__item, .conversion-card, .conversion-list').forEach(card => {
-    card.addEventListener('pointermove', e => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
-      card.style.setProperty('--my', ((e.clientY - r.top) / r.height) * 100 + '%');
-    }, {passive:true});
-  });
-
-  if(!isMobile && finePointer){
-    const shapes = $$('.shape');
-    let shapeRaf = null;
-    addEventListener('pointermove', e => {
-      if(shapeRaf) return;
-      shapeRaf = requestAnimationFrame(() => {
-        const x = (e.clientX / innerWidth - .5);
-        const y = (e.clientY / innerHeight - .5);
-        shapes.forEach((shape, index) => {
-          const depth = (index + 1) * 14;
-          shape.style.translate = `${x * depth}px ${y * depth}px`;
-        });
-        shapeRaf = null;
-      });
-    }, {passive:true});
-
-    const glow = document.createElement('div');
-    glow.className = 'cursor-glow';
-    document.body.appendChild(glow);
-
-    let raf = null;
-    let x = innerWidth / 2;
-    let y = innerHeight / 2;
-    let gx = x;
-    let gy = y;
-
-    addEventListener('pointermove', e => {
-      x = e.clientX;
-      y = e.clientY;
-      if(!raf) raf = requestAnimationFrame(loop);
-    }, {passive:true});
-
-    function loop(){
-      gx += (x - gx) * .12;
-      gy += (y - gy) * .12;
-      glow.style.left = gx + 'px';
-      glow.style.top = gy + 'px';
-      if(Math.abs(x - gx) > .5 || Math.abs(y - gy) > .5){
-        raf = requestAnimationFrame(loop);
-      }else{
-        raf = null;
-      }
-    }
-
-    $$('.price-card, .micro-offer, .step, .stat, .terminal, .contact__box, .conversion-card, .conversion-list').forEach(card => {
-      card.classList.add('tilted');
-      card.addEventListener('pointermove', e => {
-        const r = card.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - .5;
-        const py = (e.clientY - r.top) / r.height - .5;
-        card.style.rotate = `${py * -4}deg ${px * 5}deg`;
-      }, {passive:true});
-      card.addEventListener('pointerleave', () => { card.style.rotate = ''; }, {passive:true});
-    });
-  }
 });
