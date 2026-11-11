@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const $ = (sel, parent = document) => parent.querySelector(sel);
   const $$ = (sel, parent = document) => [...parent.querySelectorAll(sel)];
 
-  /* Language: default English, supports ?lang=pt and session storage */
+  /* Language: English by default, supports ?lang=pt and remembers the visitor's choice. */
   const langBtn = $('#lang-btn');
   const langElements = $$('[data-lang]');
   const urlLang = params.get('lang');
@@ -408,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
     syncScrollLock();
   }
 
-  $('.contact-choice-trigger').forEach(el => el.addEventListener('click', openContact));
+  $$('.contact-choice-trigger').forEach(el => el.addEventListener('click', openContact));
   contactClose?.addEventListener('click', closeContact);
   contactModal?.addEventListener('click', e => { if(e.target === contactModal) closeContact(); });
 
