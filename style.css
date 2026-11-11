@@ -962,3 +962,182 @@ main>.work{order:3}
 }
 @media (prefers-reduced-motion:reduce){.hero-reel__row,.particle{animation:none}.hero-reel{transform:none}.bg__particles{display:none}}
 html.motion-reduced .hero-reel__row,html.motion-reduced .particle{animation:none}
+
+
+/* =========================================================
+   GAO PORTFOLIO — PERFORMANCE + RESPONSIVE PASS
+   Content stays visible without JavaScript; motion is optional.
+   ========================================================= */
+
+html { scroll-padding-top: 82px; }
+body { overflow-x: hidden; }
+img, video, iframe { max-width: 100%; }
+button, a { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+
+/* Reveal classes no longer hide content or depend on an observer. */
+.reveal, .reveal.active {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+}
+
+/* Stop perpetual motion on decorative elements and card float loops. */
+html.motion-on .bg__orb,
+html.motion-on .bg__mesh,
+html.motion-on .bg__grid,
+html.motion-on .bg__scan,
+html.motion-on .bg__rings,
+html.motion-on .terminal,
+html.motion-on .terminal::after,
+html.motion-on .terminal__bars span,
+html.motion-on .mini-metrics span,
+html.motion-on .shape,
+html.motion-on .marquee__track,
+html.motion-on .contact__box,
+html.motion-on .big-play::before,
+html.motion-on .big-play::after,
+html.motion-on .float-quote::before,
+html.motion-on .float-quote::after,
+html.motion-on .btn--primary::after,
+html.motion-on .star,
+html.motion-on .comet,
+html.motion-on .desktop-fx span,
+html.motion-on .hero-shell,
+html.motion-on .work__card,
+html.motion-on .price-card,
+html.motion-on .step,
+html.motion-on .stat,
+html.motion-on .faq__item {
+  animation: none !important;
+}
+html.motion-on .work__card { will-change: auto; }
+html.motion-on .deck::after { animation: none !important; opacity: .18; }
+
+/* Lightweight service cards replace the old repeated service catalogue. */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.7rem;
+}
+.service-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: .9rem;
+  padding: clamp(1.1rem, 2.2vw, 1.6rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(145deg, rgba(20, 48, 84, .58), rgba(7, 20, 42, .72));
+  box-shadow: 0 14px 36px rgba(0, 5, 20, .18);
+}
+.service-card--featured {
+  border-color: rgba(114, 217, 255, .42);
+  background: linear-gradient(145deg, rgba(23, 67, 110, .64), rgba(8, 25, 51, .82));
+}
+.service-card h3 {
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  letter-spacing: -.035em;
+}
+.service-card p { line-height: 1.65; }
+.service-card ul {
+  display: grid;
+  gap: .55rem;
+  margin: auto 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+.service-card li {
+  color: var(--muted);
+  font-size: .9rem;
+}
+.service-card li::before {
+  content: "— ";
+  color: var(--cyan);
+}
+.services__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-top: 1.25rem;
+  padding: 1.2rem 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(114, 217, 255, .045);
+}
+.services__bottom p { max-width: 52ch; }
+.services__bottom .btn { flex: 0 0 auto; }
+
+/* The work is the destination: compact cards and predictable grids. */
+.gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.gallery--design { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.work__card {
+  min-width: 0;
+  will-change: auto;
+  contain: layout paint;
+}
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin: .9rem 0 1rem;
+}
+.filter-chip { min-height: 40px; }
+
+/* Small screens: no background reel animation, larger touch targets. */
+@media (max-width: 1000px) {
+  .services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .service-card:last-child { grid-column: 1 / -1; }
+  .gallery--design { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  html { scroll-padding-top: 70px; }
+  .section-pad { padding: 3.6rem 0; }
+  .hero { padding-top: 5.3rem; }
+  .hero-reel { display: none; }
+  .hero__panel { max-width: 100%; }
+  .gallery--video { grid-template-columns: minmax(0, 1fr); }
+  .gallery--design { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .work__card { border-radius: 14px; }
+  .filter-row { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; }
+  .filter-chip { flex: 0 0 auto; }
+  .services-grid { grid-template-columns: minmax(0, 1fr); }
+  .service-card:last-child { grid-column: auto; }
+  .services__bottom { align-items: stretch; flex-direction: column; }
+  .services__bottom .btn { width: 100%; }
+  .nav__actions { gap: .4rem; }
+  .hud-tc { display: none; }
+  .nav__toggle, .nav__close, .lang { min-width: 44px; min-height: 44px; }
+  .contact-choice__panel, .lightbox__content { max-height: 88svh; overflow-y: auto; }
+  .contact-choice__grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-reel__row, .hero-reel__row--one, .hero-reel__row--two { animation: none !important; }
+}
+@media (max-width: 420px) {
+  .gallery--design { grid-template-columns: minmax(0, 1fr); }
+  .hero__buttons { gap: .65rem; }
+  .hero__badges { gap: .4rem; }
+  .hero__badges span { white-space: normal; }
+  .contact__box { padding: 1.2rem; }
+  .nav { gap: .5rem; }
+  .nav__actions { margin-left: auto; }
+}
+
+/* Respect reduced-motion settings and the explicit ?motion=off option. */
+@media (prefers-reduced-motion: reduce) {
+  html *, html *::before, html *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+html.motion-reduced *, html.motion-reduced *::before, html.motion-reduced *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
